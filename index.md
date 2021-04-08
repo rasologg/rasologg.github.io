@@ -6,4 +6,6 @@
 
 [Kubernetes pour les developpeurs](./kubernetes-for-developers/index.md)
 
+[Kubernetes : Installer prometheus via l'operateur](./kubernetes-monitoring/index.md)
+
 [Apache Maven](./maven/index.md)
