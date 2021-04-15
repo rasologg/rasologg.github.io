@@ -32,7 +32,7 @@ kubectl get deploy
 
 ```
 NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-prometheus-operator   1/1     1            1           18m
+prometheus-operator   0/1     1            0           10s
 ```
 
 Maintenant on peut configurer le RBAC, afin d'autoriser Prometheus à acceder à l'API de Kubernetes.
@@ -97,7 +97,7 @@ clusterrole.rbac.authorization.k8s.io/prometheus created
 clusterrolebinding.rbac.authorization.k8s.io/prometheus created
 ```
 
-Deployer prometheus, d'abord créer un fichier YAML (par exemple prometheus.yaml) contenant le code ci-dessous
+Créer un fichier YAML pour deployer prometheus (par exemple prometheus.yaml) contenant le code ci-dessous
 
 ```yaml
 apiVersion: monitoring.coreos.com/v1
@@ -141,7 +141,7 @@ On devrait obtenir le resultat suivant
 
 ```
 NAME         VERSION   REPLICAS   AGE
-prometheus   v2.22.1   2          5h47m
+prometheus   v2.22.1   2          12s
 ```
 
 Et une autre commande
@@ -153,8 +153,8 @@ Et un autre resultat :-)
 
 ```
 NAME                      READY   STATUS    RESTARTS   AGE
-prometheus-prometheus-0   2/2     Running   1          30m
-prometheus-prometheus-1   2/2     Running   0          30m
+prometheus-prometheus-0   2/2     Running   1          69s
+prometheus-prometheus-1   2/2     Running   1          69s
 ```
 
 Et une derniere étape pour exposer le service afin que prometheus soit accessible via Grafana. 
@@ -195,11 +195,11 @@ kubectl get service
 ```
 
 ```
-NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)              AGE
-kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP              32d
-prometheus            ClusterIP   10.108.130.240   <none>        9090/TCP             5h46m
-prometheus-operated   ClusterIP   None             <none>        9090/TCP             5h54m
-prometheus-operator   ClusterIP   None             <none>        8080/TCP             6h15m
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP    72m
+prometheus            ClusterIP   10.107.134.128   <none>        9090/TCP   11s
+prometheus-operated   ClusterIP   None             <none>        9090/TCP   2m26s
+prometheus-operator   ClusterIP   None             <none>        8080/TCP   5m56s
 ```
 
 Et voilà, on a un prometheus UP&RUNNING ;-) mais sans Grafana le travail n'est pas bien fait.
