@@ -1,17 +1,17 @@
 ---
 layout: post
-title:  "Kubernetes pour les developpeurs"
+title:  "Kubernetes pour les développeurs"
 date:   2021-04-16 13:33:29 +0200
 categories: blog
 ---
 
-# Image
+# Qu'est ce qu'une image ?
 
-Un ensemble de fichiers et repertoires construit au dessus d'un mini-noyaux linux. C'est une encapsule d'une application sous une forme portable et facile à déployer. L'image contient tous les fichiers que l'application a besoin pour fonctionner correctement.
+Dans le monde du Kubernetes, une image est une encapsulation d'une application sous une forme portable et facile à déployer. L'image contient tous les fichiers que l'application a besoin pour fonctionner correctement, et elle est construite à partir d'un mini-noyaux Linux.
 
-Lors de l'execution sur une machine, image devient un conteneur, un conteneur est une instance d'une image.
+Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d'une image.
 
-Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile. D'autres outils sont aussi disponible pour construire une image.
+Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d'en créer à partir d'autres outils sans écrire ce fichier.
 
 Voici un exemple d'un Dockerfile :
 
@@ -21,7 +21,7 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 ```
 
-Une image un ensemble des couches et construit à partir d'une image. Dans l'exemple ci-dessus, on part de l'image "nginx:alpine" qui est disponible sur Internet, qui elle est basée sur une autre image "alpine" et ainsi de suite.
+Une image un ensemble des couches et toujours construit à partir d'une autre image. Dans l'exemple ci-dessus, on part de l'image "nginx:alpine" qui est disponible sur Internet, qui elle est basée sur une autre image "alpine" et ainsi de suite.
 
 Si on souhaite construire une image à partir de zero, on utilise l'instruction "FROM scratch", ceci ordonne à l'outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).
 
@@ -35,7 +35,7 @@ CMD ["sh"]
 
 Google a developpé un outil open-source, 100% Java, [Jib](https://github.com/GoogleContainerTools/jib) pour construire facilement une image sans avoir besoin d'un daemon comme Docker.
 
-# Conteneur
+# Qu'est ce qu'un conteneur ?
 
 Un conteneur est une instance d'une image. Si on compate à la programmation orienté objet, image est un "Class", un conteneur est un "object". 
 
@@ -131,6 +131,12 @@ Toutes les fonctionnalités de Kubernetes sont accessible via API RESTful.
 Plusieurs API-Resources : apps, networking, storage, ...
 
 Tous les 3 mois il y a un update d'API, il faut bien identifier la version à utiliser.
+
+Pour savoir la version de l'API utilisée par le cluster, il suffit de lancer la commande suivante :
+
+```
+kubectl api-versions
+```
 
 ## L'orchestrateur (kube-scheduler)
 
@@ -289,6 +295,7 @@ spec:
 ```
 kubectl port-forward pod/podname port_externe:port_interne
 ```
+
 ### Limitation des resources utilisé par un pod
 
 Par defaut un pod utilise autant de CPU et memoire pour faire son travail.
@@ -304,17 +311,300 @@ limits:
 
 ## Deployments
 
-Une entité pour standardiser la gestion des pods. Un deployment crée un replicaset automatiquement.
+Une entité pour standardiser la gestion des pods. Un deployment crée un autre object "replicaset" automatiquement, le "replicaset" est fortement lié à un "deployment" et donc inutile de le gerer separement.
 
 Un deploiement permet de gerer le scalabilité de l'application, la strategie de mise à jour et l'historique.
 
 Si un pod tombe en panne, le deploiement crée automatique un autre.
 
+En production, il faut toujours créer un pod à partir d'un objet "deployment".
+
+Voici la structure d'un fichier YAML "deployment" :
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <NomApplication>
+spec:
+  selector:
+    matchLabels:
+      app: <NomApplication>
+  template:
+    metadata:
+      labels:
+        app: <NomApplication>
+    spec:
+      containers:
+      - name: <NomApplication>
+        image: <Image>
+        resources:
+          limits:
+            memory: <Memory>
+            cpu: <CPU>
+        ports:
+        - containerPort: <Port>
+{% endhighlight %}
+
+Comme tous les fichiers de Kubernetes, ça commence toujours par la version de l'API (apiVersion). L'objet de deploiement se trouve donc dans "apps".
+"kind" sera toujours "Deployment".
+metadata.name : est le nom de l'application à deployer.
+containers.image : est le chemin où se trouve l'image, et la version.
+
+Voici un exemple complet pour deployer l'application Redis.
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 6379
+{% endhighlight %}
+
+```
+❯ kubectl apply -f redis-deploy.yaml
+deployment.apps/redis created
+```
+
+Verifions si l'application est demarrée.
+
+```
+❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-726rp   1/1     Running   0          24s
+```
+
+Ici, l'option "-l" veut dire label, et donc on souhaite juste afficher les pods qui ont un label "app" avec la valeur "redis". C'est la valeur qu'on a indiqué dans le fichier YAML ci-dessus (spec.template.metadata.labels).
+
+Et maintenant si supprime le pod :
+
+```
+❯ kubectl delete po redis-d8c6dcd54-726rp
+pod "redis-d8c6dcd54-726rp" deleted
+```
+
+On constate que Kubernetes crée automatiquement une autre instance :
+
+redis-d8c6dcd54-726rp                  1/1     Terminating         0          66s
+redis-d8c6dcd54-xbx8j                  0/1     ContainerCreating   0          3s
+
+```
+❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-xbx8j   1/1     Running   0          86s
+```
+
+On a dit que l'historique de deploiement est aussi gérée par l'object "Deployment".
+On peut consulter cette historique via la commande :
+
+```
+❯ kubectl rollout history deployment redis
+```
+ça devrait afficher le resultat suivant :
+
+```
+deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         <none>
+```
+Ici on n'a qu'une seule revision parce qu'on a rien modifié pour l'instant.
+Kubernetes suit une strategie quand une modification est faite sur le deploiment : 
+- la stratégie "Recreate" : ça supprime l'ancien pod et crée une nouvelle, ça implique une petite indisponibilité du service.
+- la stratégie "RollingUpdate" : cette stretégie garantit la disponibilité de l'application, et donc Kubernetes remplace un pod à la fois.
+
+On va apporter quelques modifications à notre fichier redis-deploy.yaml pour gérer la stratégie de mise à jour et commençons par une ancienne version de Redis "5.0.12-alpine" :
+
+{% highlight yaml %}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:5.0.12-alpine
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 6379
+{% endhighlight %}
+
+```
+❯ kubectl apply -f redis-deploy.yaml
+deployment.apps/redis configured
+```
+Verifions :
+
+````
+❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-9bqfl   1/1     Running   0          12s
+redis-d8c6dcd54-bjxjf   1/1     Running   0          12s
+redis-d8c6dcd54-nnrqs   1/1     Running   0          12s
+redis-d8c6dcd54-t8t26   1/1     Running   0          12s
+```
+Maintenant on a bien 4 replicas, comme c'est demandé dans le fichier YAML.
+
+```
+❯ kubectl rollout history deployment redis
+deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         <none>
+```
+
+Maintenant, modifions la version de Redis :
+
+```
+❯ kubectl set image deployment.apps/redis redis=redis:6-alpine
+deployment.apps/redis image updated
+```
+
+Vérifions si la version a été mise à jour
+```
+❯ kubectl get deployment.apps/redis -o=jsonpath='{$.spec.template.spec.containers[:1].image}'
+```
+
+```
+redis:6-alpine
+```
+
+Et si on reconsulte l'historique, la revision devrait être 2 :
+
+```
+❯ kubectl rollout history deployment redis
+deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+```
+
+```
+kubectl rollout history deployment redis --revision=1
+```
+```
+deployment.apps/redis with revision #1
+Pod Template:
+  Labels:	app=redis
+	pod-template-hash=68d544cd59
+  Containers:
+   redis:
+    Image:	redis:5.0.12-alpine
+    Port:	6379/TCP
+    Host Port:	0/TCP
+    Limits:
+      cpu:	500m
+      memory:	128Mi
+    Environment:	<none>
+    Mounts:	<none>
+  Volumes:	<none
+```
+```
+kubectl rollout history deployment redis --revision=2
+```
+```
+deployment.apps/redis with revision #2
+Pod Template:
+  Labels:	app=redis
+	pod-template-hash=5f7d7d959f
+  Containers:
+   redis:
+    Image:	redis:6-alpine
+    Port:	6379/TCP
+    Host Port:	0/TCP
+    Limits:
+      cpu:	500m
+      memory:	128Mi
+    Environment:	<none>
+    Mounts:	<none>
+  Volumes:	<none>
+```
+
+```
+❯ kubectl get replicasets.apps -l app=redis
+NAME               DESIRED   CURRENT   READY   AGE
+redis-5f7d7d959f   4         4         4       11m
+redis-68d544cd59   0         0         0       15m
+```
+
+Si on revient en arriere
+
+```
+❯ kubectl rollout undo deployment redis --to-revision=1
+deployment.apps/redis rolled back
+```
+
 ## Services
 
+Un pod tout seul n'est pas accessible depuis l'exterieur en tant qu'application. 
+
+Pour debugger, on peut quand meme utiliser le "port forward", mais ceci n'est pas l'utilisation normale d'une application.
+
+```
+kubectl port-forward pod/mynginx 8989:80
+```
+
+```
+Forwarding from 127.0.0.1:8989 -> 80
+Forwarding from [::1]:8989 -> 80
+Handling connection for 8989
+```
+
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-port-forward.png)
+
+Pour exposer l'application, il faut créer un service.
+
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access.png)
+
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access-2.png)
+
+Il y a plusieurs type de service :
+
+- ClusterIP : le type par défaut, et il est accessible qu'à l'interieur du cluster.
+- NodePort : ouvre le port de l'application sur le noeud, et donc on peut y acceder directement depuis l'exterieur. 
+- LoadBalancer : utilisé par le fourniseur cloud public.
+- ExternalName : une sorte de redirection de nom DNS.
+- Service sans "selector" : utilisé pour connecter directement à une IP/port par exemple un serveur de base de données ou une application exterieur au cluster Kubernetes.
+
+
+
 ## Ingress
+//TODO
 
 ## Persistent Volumes
+//TODO
 
 ## Jobs
 

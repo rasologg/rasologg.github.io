@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-04-16T14:40:21+02:00</updated><id>/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="/blog/2021/04/16/apache-maven.html" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/apache-maven</id><content type="html" xml:base="/blog/2021/04/16/apache-maven.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://rasologg.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://rasologg.github.io/" rel="alternate" type="text/html" /><updated>2021-04-16T15:28:32+02:00</updated><id>https://rasologg.github.io/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="https://rasologg.github.io/apache-maven/" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>https://rasologg.github.io/apache-maven</id><content type="html" xml:base="https://rasologg.github.io/apache-maven/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.&lt;/p&gt;
 
@@ -402,13 +402,13 @@ C’est pour gérer ce genre de problematique que Maven propose le multi-module.
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:describe -Ddetail=true -Dplugin=compiler
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:help -Ddetail=true
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Introduction</summary></entry><entry><title type="html">Kubernetes pour les developpeurs</title><link href="/blog/2021/04/16/kubernetes-pour-les-developpeurs.html" rel="alternate" type="text/html" title="Kubernetes pour les developpeurs" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/kubernetes-pour-les-developpeurs</id><content type="html" xml:base="/blog/2021/04/16/kubernetes-pour-les-developpeurs.html">&lt;h1 id=&quot;image&quot;&gt;Image&lt;/h1&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Introduction</summary></entry><entry><title type="html">Kubernetes pour les développeurs</title><link href="https://rasologg.github.io/kubernetes-pour-les-developpeurs/" rel="alternate" type="text/html" title="Kubernetes pour les développeurs" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>https://rasologg.github.io/kubernetes-pour-les-developpeurs</id><content type="html" xml:base="https://rasologg.github.io/kubernetes-pour-les-developpeurs/">&lt;h1 id=&quot;quest-ce-quune-image-&quot;&gt;Qu’est ce qu’une image ?&lt;/h1&gt;
 
-&lt;p&gt;Un ensemble de fichiers et repertoires construit au dessus d’un mini-noyaux linux. C’est une encapsule d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement.&lt;/p&gt;
+&lt;p&gt;Dans le monde du Kubernetes, une image est une encapsulation d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.&lt;/p&gt;
 
-&lt;p&gt;Lors de l’execution sur une machine, image devient un conteneur, un conteneur est une instance d’une image.&lt;/p&gt;
+&lt;p&gt;Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d’une image.&lt;/p&gt;
 
-&lt;p&gt;Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile. D’autres outils sont aussi disponible pour construire une image.&lt;/p&gt;
+&lt;p&gt;Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d’en créer à partir d’autres outils sans écrire ce fichier.&lt;/p&gt;
 
 &lt;p&gt;Voici un exemple d’un Dockerfile :&lt;/p&gt;
 
@@ -417,7 +417,7 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Une image un ensemble des couches et construit à partir d’une image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.&lt;/p&gt;
+&lt;p&gt;Une image un ensemble des couches et toujours construit à partir d’une autre image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.&lt;/p&gt;
 
 &lt;p&gt;Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”, ceci ordonne à l’outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).&lt;/p&gt;
 
@@ -430,7 +430,7 @@ CMD [&quot;sh&quot;]
 
 &lt;p&gt;Google a developpé un outil open-source, 100% Java, &lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt; pour construire facilement une image sans avoir besoin d’un daemon comme Docker.&lt;/p&gt;
 
-&lt;h1 id=&quot;conteneur&quot;&gt;Conteneur&lt;/h1&gt;
+&lt;h1 id=&quot;quest-ce-quun-conteneur-&quot;&gt;Qu’est ce qu’un conteneur ?&lt;/h1&gt;
 
 &lt;p&gt;Un conteneur est une instance d’une image. Si on compate à la programmation orienté objet, image est un “Class”, un conteneur est un “object”.&lt;/p&gt;
 
@@ -666,6 +666,7 @@ service/kubernetes   ClusterIP   10.96.0.1    &amp;lt;none&amp;gt;        443/TC
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl port-forward pod/podname port_externe:port_interne
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h3 id=&quot;limitation-des-resources-utilisé-par-un-pod&quot;&gt;Limitation des resources utilisé par un pod&lt;/h3&gt;
 
 &lt;p&gt;Par defaut un pod utilise autant de CPU et memoire pour faire son travail.
@@ -679,11 +680,13 @@ limits:
 
 &lt;h2 id=&quot;deployments&quot;&gt;Deployments&lt;/h2&gt;
 
-&lt;p&gt;Une entité pour standardiser la gestion des pods. Un deployment crée un replicaset automatiquement.&lt;/p&gt;
+&lt;p&gt;Une entité pour standardiser la gestion des pods. Un deployment crée un autre object “replicaset” automatiquement, le “replicaset” est fortement lié à un “deployment” et donc inutile de le gerer separement.&lt;/p&gt;
 
 &lt;p&gt;Un deploiement permet de gerer le scalabilité de l’application, la strategie de mise à jour et l’historique.&lt;/p&gt;
 
 &lt;p&gt;Si un pod tombe en panne, le deploiement crée automatique un autre.&lt;/p&gt;
+
+&lt;p&gt;En production, il faut toujours créer un pod à partir d’un objet “deployment”.&lt;/p&gt;
 
 &lt;h2 id=&quot;services&quot;&gt;Services&lt;/h2&gt;
 
@@ -734,7 +737,7 @@ limits:
 
 &lt;h1 id=&quot;operator&quot;&gt;Operator&lt;/h1&gt;
 
-&lt;p&gt;un moyen d’etendre les ressources que l’API Serveur de Kubernetes peut gerer. On appelle ceci CRD (Custom Resource Definitions).&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Image</summary></entry><entry><title type="html">Kubernetes monitoring</title><link href="/blog/2021/04/01/kubernetes-monitoring.html" rel="alternate" type="text/html" title="Kubernetes monitoring" /><published>2021-04-01T13:33:29+02:00</published><updated>2021-04-01T13:33:29+02:00</updated><id>/blog/2021/04/01/kubernetes-monitoring</id><content type="html" xml:base="/blog/2021/04/01/kubernetes-monitoring.html">&lt;h1 id=&quot;installer-prometheus-operator-pour-kubernetes&quot;&gt;Installer Prometheus Operator pour Kubernetes&lt;/h1&gt;
+&lt;p&gt;un moyen d’etendre les ressources que l’API Serveur de Kubernetes peut gerer. On appelle ceci CRD (Custom Resource Definitions).&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Qu’est ce qu’une image ?</summary></entry><entry><title type="html">Kubernetes monitoring</title><link href="https://rasologg.github.io/kubernetes-monitoring/" rel="alternate" type="text/html" title="Kubernetes monitoring" /><published>2021-04-01T13:33:29+02:00</published><updated>2021-04-01T13:33:29+02:00</updated><id>https://rasologg.github.io/kubernetes-monitoring</id><content type="html" xml:base="https://rasologg.github.io/kubernetes-monitoring/">&lt;h1 id=&quot;installer-prometheus-operator-pour-kubernetes&quot;&gt;Installer Prometheus Operator pour Kubernetes&lt;/h1&gt;
 
 &lt;p&gt;Installer l’operateur via la ligne de commande suivante, si vous voulez specifier un autre namespace que le default, vous pouvez ajouter le “-n votre_namespace”&lt;/p&gt;
 
@@ -951,7 +954,7 @@ NOTES:
 
     echo &quot;User: admin&quot;
     echo &quot;Password: $(kubectl get secret grafana-admin --namespace default -o jsonpath=&quot;{.data.GF_SECURITY_ADMIN_PASSWORD}&quot; | base64 --decode)&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Installer Prometheus Operator pour Kubernetes</summary></entry><entry><title type="html">Kubernetes: gestion de secrets</title><link href="/blog/2021/03/16/kubernetes-secrets.html" rel="alternate" type="text/html" title="Kubernetes: gestion de secrets" /><published>2021-03-16T12:33:29+01:00</published><updated>2021-03-16T12:33:29+01:00</updated><id>/blog/2021/03/16/kubernetes-secrets</id><content type="html" xml:base="/blog/2021/03/16/kubernetes-secrets.html">&lt;h1 id=&quot;la-gestion-des-secrets-dans-kubernetes-à-lépoque-de-gitops&quot;&gt;La gestion des secrets dans Kubernetes à l’époque de GitOps&lt;/h1&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Installer Prometheus Operator pour Kubernetes</summary></entry><entry><title type="html">Kubernetes: gestion de secrets</title><link href="https://rasologg.github.io/kubernetes-secrets/" rel="alternate" type="text/html" title="Kubernetes: gestion de secrets" /><published>2021-03-16T12:33:29+01:00</published><updated>2021-03-16T12:33:29+01:00</updated><id>https://rasologg.github.io/kubernetes-secrets</id><content type="html" xml:base="https://rasologg.github.io/kubernetes-secrets/">&lt;h1 id=&quot;la-gestion-des-secrets-dans-kubernetes-à-lépoque-de-gitops&quot;&gt;La gestion des secrets dans Kubernetes à l’époque de GitOps&lt;/h1&gt;
 
 &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Ces derniers temps, on attend de plus en plus parler de GitOps avec Kubernetes. Grosso modo, GitOps, c’est tout gérer via Git, 
@@ -970,7 +973,7 @@ Et ceci déroge au concept de GitOps.&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Plus d’info :
-https://www.cncf.io/announcements/2021/02/23/cncf-provides-insights-into-secrets-management-tools-with-latest-end-user-technology-radar/&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">La gestion des secrets dans Kubernetes à l’époque de GitOps</summary></entry><entry><title type="html">Python : developper avec Flask</title><link href="/blog/2021/01/15/developper-avec-python-flask.html" rel="alternate" type="text/html" title="Python : developper avec Flask" /><published>2021-01-15T12:33:29+01:00</published><updated>2021-01-15T12:33:29+01:00</updated><id>/blog/2021/01/15/developper-avec-python-flask</id><content type="html" xml:base="/blog/2021/01/15/developper-avec-python-flask.html">&lt;h2 id=&quot;developper-un-site-web-avec-python-flask&quot;&gt;Developper un site web avec Python Flask&lt;/h2&gt;
+https://www.cncf.io/announcements/2021/02/23/cncf-provides-insights-into-secrets-management-tools-with-latest-end-user-technology-radar/&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">La gestion des secrets dans Kubernetes à l’époque de GitOps</summary></entry><entry><title type="html">Python : developper avec Flask</title><link href="https://rasologg.github.io/developper-avec-python-flask/" rel="alternate" type="text/html" title="Python : developper avec Flask" /><published>2021-01-15T12:33:29+01:00</published><updated>2021-01-15T12:33:29+01:00</updated><id>https://rasologg.github.io/developper-avec-python-flask</id><content type="html" xml:base="https://rasologg.github.io/developper-avec-python-flask/">&lt;h2 id=&quot;developper-un-site-web-avec-python-flask&quot;&gt;Developper un site web avec Python Flask&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Installer Python. Un tutoriel interessant se trouve ici &lt;a href=&quot;https://realpython.com/installing-python&quot;&gt;RealPython&lt;/a&gt;&lt;/li&gt;

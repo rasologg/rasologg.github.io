@@ -1,10 +1,59 @@
-I"�K<h1 id="image">Image</h1>
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Kubernetes pour les développeurs | Gégé Rasolondraibe</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Kubernetes pour les développeurs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Qu’est ce qu’une image ?" />
+<meta property="og:description" content="Qu’est ce qu’une image ?" />
+<link rel="canonical" href="https://rasologg.github.io/kubernetes-pour-les-developpeurs/" />
+<meta property="og:url" content="https://rasologg.github.io/kubernetes-pour-les-developpeurs/" />
+<meta property="og:site_name" content="Gégé Rasolondraibe" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-16T13:33:29+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes pour les développeurs" />
+<script type="application/ld+json">
+{"url":"https://rasologg.github.io/kubernetes-pour-les-developpeurs/","headline":"Kubernetes pour les développeurs","dateModified":"2021-04-16T13:33:29+02:00","datePublished":"2021-04-16T13:33:29+02:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://rasologg.github.io/kubernetes-pour-les-developpeurs/"},"description":"Qu’est ce qu’une image ?","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://rasologg.github.io/feed.xml" title="Gégé Rasolondraibe" /></head>
+<body><header class="site-header" role="banner">
 
-<p>Un ensemble de fichiers et repertoires construit au dessus d’un mini-noyaux linux. C’est une encapsule d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement.</p>
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Gégé Rasolondraibe</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
 
-<p>Lors de l’execution sur une machine, image devient un conteneur, un conteneur est une instance d’une image.</p>
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-<p>Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile. D’autres outils sont aussi disponible pour construire une image.</p>
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Kubernetes pour les développeurs</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-04-16T13:33:29+02:00" itemprop="datePublished">Apr 16, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="quest-ce-quune-image-">Qu’est ce qu’une image ?</h1>
+
+<p>Dans le monde du Kubernetes, une image est une encapsulation d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.</p>
+
+<p>Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d’une image.</p>
+
+<p>Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d’en créer à partir d’autres outils sans écrire ce fichier.</p>
 
 <p>Voici un exemple d’un Dockerfile :</p>
 
@@ -13,7 +62,7 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 </code></pre></div></div>
 
-<p>Une image un ensemble des couches et construit à partir d’une image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.</p>
+<p>Une image un ensemble des couches et toujours construit à partir d’une autre image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.</p>
 
 <p>Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”, ceci ordonne à l’outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).</p>
 
@@ -26,7 +75,7 @@ CMD ["sh"]
 
 <p>Google a developpé un outil open-source, 100% Java, <a href="https://github.com/GoogleContainerTools/jib">Jib</a> pour construire facilement une image sans avoir besoin d’un daemon comme Docker.</p>
 
-<h1 id="conteneur">Conteneur</h1>
+<h1 id="quest-ce-quun-conteneur-">Qu’est ce qu’un conteneur ?</h1>
 
 <p>Un conteneur est une instance d’une image. Si on compate à la programmation orienté objet, image est un “Class”, un conteneur est un “object”.</p>
 
@@ -36,7 +85,7 @@ CMD ["sh"]
 
 <p>Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.</p>
 
-<p><img src="./kubernetes-developper-application-container.png" alt="alt text" title="Comment fonctionne un conteneur" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-container.png" alt="Screenshot" /></p>
 
 <p>Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.</p>
 
@@ -88,7 +137,7 @@ Status: Downloaded newer image for nginx:1.19
 
 <p>Si on simplifie, Kubernetes est un RESTful API qui expose toutes les operations possibles à faire sur sa base de données, qui est une base de données NoSQL ETCD.</p>
 
-<p><img src="./kubernetes-developper-application-api-server.png" alt="alt text" title="Comment fonctionne l'api de kubernetes" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-api-server.png" alt="Screenshot" /></p>
 
 <h2 id="dashbord">dashbord</h2>
 
@@ -110,7 +159,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 <h1 id="architecture-de-kubernetes">Architecture de Kubernetes</h1>
 
-<p><img src="./kubernetes-developper-application-architecture.png" alt="alt text" title="Comment fonctionne l'api de kubernetes" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-architecture.png" alt="Screenshot" /></p>
 
 <h2 id="lapi-kube-apiserver">L’API (kube-apiserver)</h2>
 
@@ -262,6 +311,7 @@ service/kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   37m
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl port-forward pod/podname port_externe:port_interne
 </code></pre></div></div>
+
 <h3 id="limitation-des-resources-utilisé-par-un-pod">Limitation des resources utilisé par un pod</h3>
 
 <p>Par defaut un pod utilise autant de CPU et memoire pour faire son travail.
@@ -275,11 +325,13 @@ limits:
 
 <h2 id="deployments">Deployments</h2>
 
-<p>Une entité pour standardiser la gestion des pods. Un deployment crée un replicaset automatiquement.</p>
+<p>Une entité pour standardiser la gestion des pods. Un deployment crée un autre object “replicaset” automatiquement, le “replicaset” est fortement lié à un “deployment” et donc inutile de le gerer separement.</p>
 
 <p>Un deploiement permet de gerer le scalabilité de l’application, la strategie de mise à jour et l’historique.</p>
 
 <p>Si un pod tombe en panne, le deploiement crée automatique un autre.</p>
+
+<p>En production, il faut toujours créer un pod à partir d’un objet “deployment”.</p>
 
 <h2 id="services">Services</h2>
 
@@ -332,4 +384,35 @@ limits:
 
 <p>un moyen d’etendre les ressources que l’API Serveur de Kubernetes peut gerer. On appelle ceci CRD (Custom Resource Definitions).</p>
 
-:ET
+
+  </div><a class="u-url" href="/kubernetes-pour-les-developpeurs/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Gégé Rasolondraibe</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Gégé Rasolondraibe</li><li><a class="u-email" href="mailto:"></a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/rasologg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">rasologg</span></a></li><li><a href="https://www.twitter.com/rasologg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">rasologg</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>my blog.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

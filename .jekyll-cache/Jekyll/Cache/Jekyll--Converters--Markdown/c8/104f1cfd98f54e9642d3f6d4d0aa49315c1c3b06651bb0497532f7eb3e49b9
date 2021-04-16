@@ -1,6 +1,6 @@
-I"\K<h1 id="image">Image</h1>
+I"pK<h1 id="quest-ce-quune-image-">Qu’est ce qu’une image ?</h1>
 
-<p>Un ensemble de fichiers et repertoires construit au dessus d’un mini-noyaux linux. C’est une encapsule d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement.</p>
+<p>Dans le monde du Kubernetes, une image est une encapsulation d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.</p>
 
 <p>Lors de l’execution sur une machine, image devient un conteneur, un conteneur est une instance d’une image.</p>
 
@@ -110,7 +110,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 <h1 id="architecture-de-kubernetes">Architecture de Kubernetes</h1>
 
-<p><img src="./kubernetes-developper-application-architecture.png" alt="alt text" title="Comment fonctionne l'api de kubernetes" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-architecture.png" alt="Screenshot" /></p>
 
 <h2 id="lapi-kube-apiserver">L’API (kube-apiserver)</h2>
 

@@ -1,10 +1,10 @@
-I"|K<h1 id="image">Image</h1>
+I"�K<h1 id="quest-ce-quune-image-">Qu’est ce qu’une image ?</h1>
 
-<p>Un ensemble de fichiers et repertoires construit au dessus d’un mini-noyaux linux. C’est une encapsule d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement.</p>
+<p>Dans le monde du Kubernetes, une image est une encapsulation d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.</p>
 
-<p>Lors de l’execution sur une machine, image devient un conteneur, un conteneur est une instance d’une image.</p>
+<p>Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d’une image.</p>
 
-<p>Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile. D’autres outils sont aussi disponible pour construire une image.</p>
+<p>Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d’en créer à partir d’autres outils sans écrire ce fichier.</p>
 
 <p>Voici un exemple d’un Dockerfile :</p>
 
@@ -13,7 +13,7 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 </code></pre></div></div>
 
-<p>Une image un ensemble des couches et construit à partir d’une image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.</p>
+<p>Une image un ensemble des couches et toujours construit à partir d’une autre image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.</p>
 
 <p>Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”, ceci ordonne à l’outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).</p>
 
@@ -88,7 +88,7 @@ Status: Downloaded newer image for nginx:1.19
 
 <p>Si on simplifie, Kubernetes est un RESTful API qui expose toutes les operations possibles à faire sur sa base de données, qui est une base de données NoSQL ETCD.</p>
 
-<p><img src="./kubernetes-developper-application-api-server.png" alt="alt text" title="Comment fonctionne l'api de kubernetes" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-api-server.png" alt="Screenshot" /></p>
 
 <h2 id="dashbord">dashbord</h2>
 
@@ -110,7 +110,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 <h1 id="architecture-de-kubernetes">Architecture de Kubernetes</h1>
 
-<p><img src="./kubernetes-developper-application-architecture.png" alt="alt text" title="Comment fonctionne l'api de kubernetes" /></p>
+<p><img src="/assets/images/kubernetes-developper-application-architecture.png" alt="Screenshot" /></p>
 
 <h2 id="lapi-kube-apiserver">L’API (kube-apiserver)</h2>
 
@@ -262,6 +262,7 @@ service/kubernetes   ClusterIP   10.96.0.1    &lt;none&gt;        443/TCP   37m
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl port-forward pod/podname port_externe:port_interne
 </code></pre></div></div>
+
 <h3 id="limitation-des-resources-utilisé-par-un-pod">Limitation des resources utilisé par un pod</h3>
 
 <p>Par defaut un pod utilise autant de CPU et memoire pour faire son travail.
@@ -280,6 +281,8 @@ limits:
 <p>Un deploiement permet de gerer le scalabilité de l’application, la strategie de mise à jour et l’historique.</p>
 
 <p>Si un pod tombe en panne, le deploiement crée automatique un autre.</p>
+
+<p>En production, il faut toujours créer un pod à partir d’un objet “deployment”.</p>
 
 <h2 id="services">Services</h2>
 
