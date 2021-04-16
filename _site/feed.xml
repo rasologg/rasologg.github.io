@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-04-16T14:14:32+02:00</updated><id>/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="/blog/2021/04/16/apache-maven.html" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/apache-maven</id><content type="html" xml:base="/blog/2021/04/16/apache-maven.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.&lt;/p&gt;
+
+&lt;p&gt;De manière generale, une application écrite en Java, par exemple un microservice, a besoin d’utiliser une base de données, de lancer un serveur web HTTP ou d’effectuer des calculs, etc….&lt;/p&gt;
+
+&lt;p&gt;Pas besoin de réinventer la roue, quelqu’un a déjà fait le travail à notre place et a publié ses projets sur Internet, c’est la magie de l’Open Source.&lt;/p&gt;
+
+&lt;p&gt;Pour réutiliser ces composants Open Source dans notre projet, on a besoin d’un outil comme Maven. Il nous aide à résoudre beaucoup de problématiques comme la compatibilité des versions, l’inter-dependance entre composants, etc…&lt;/p&gt;
+
+&lt;p&gt;Dans le monde Java, il y a trois principaux outils pour gérer les dependances :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://maven.apache.org&quot;&gt;Apache Maven&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gradle.org/&quot;&gt;Gradle&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ant.apache.org/&quot;&gt;Apache Ant&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Apache Maven reste le plus populaire et le plus utilisé même si Gradle monte en puissance.&lt;/p&gt;
+
+&lt;p&gt;Apache Maven a commencé en 2002, très stable, robuste et supporté par la majorité des IDEs (Intellij, Eclipse, …), il est aussi utilisé par quasiment tous les projets Open Source.&lt;/p&gt;
+
+&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;En tant que Développeur, on utilise très souvent plusieurs outils et en plusieurs versions. Pour faciliter l’installation et la gestion de ces outils, on peut utiliser &lt;a href=&quot;https://sdkman.io/&quot;&gt;SDK Man&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;La procedure à suivre pour installer SDKMan est disponible à l’adresse suivante https://sdkman.io/install.&lt;/p&gt;
+
+&lt;p&gt;Une fois SDKMan est installé, lancé la commande suivante pour installer Java JDK (s’il n’est pas déjà installé sur votre ordinateur) :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sdk install java 11.0.10.hs-adpt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;La 11.0.10.hs-adpt est la derniere version de OpenJDK11 disponible sur la plateforme sdkman au moment où j’écris cet article mais vous pouvez afficher la dernière version via la commande :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sdk ls java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Après avoir installé Java, voici la commande pour installer Maven :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sdk install maven
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A noter que Maven est integré par défaut dans l’IDE comme Intellij, Eclipse. On peut l’utiliser directement mais personnelement je prefere utiliser la ligne de commande et avoir une installation à l’exterieur de l’IDE.&lt;/p&gt;
+
+&lt;p&gt;Pour vérifier que l’installation a bien fonctionné :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn --version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Le résultat devrait afficher la version de Maven et son emplacement.&lt;/p&gt;
+
+&lt;h1 id=&quot;créer-un-projet-java-via-maven&quot;&gt;Créer un projet Java via Maven&lt;/h1&gt;
+
+&lt;p&gt;On peut créer un projet Java/Maven via un IDE type Intellij ou Eclipse, mais pour comprendre le fonctionnement, on va d’abord créer un projet Maven via la ligne commande :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate -DgroupId=io.rasologg.tutoriel -DartifactId=java-maven-project -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Si tout va bien, des fichiers seront téléchargés et Maven va créer un le projet contenant structuré comme ci-dessous :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;java-maven-project
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── io
+    │           └── rasologg
+    │               └── tutoriel
+    │                   └── App.java
+    └── test
+        └── java
+            └── io
+                └── rasologg
+                    └── tutoriel
+                        └── AppTest.java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;archetype&quot;&gt;Archetype&lt;/h2&gt;
+
+&lt;p&gt;Simplement un template de projet, ici on utilise “maven-archetype-quickstart” est genere un projet Java très basique à partir du template. On peut trouver une liste des archetypes inclus par défaut dans Maven https://maven.apache.org/archetypes/ . On peut écrire son propre archetype.&lt;/p&gt;
+
+&lt;h2 id=&quot;superpom&quot;&gt;SuperPOM&lt;/h2&gt;
+
+&lt;p&gt;Pour bien utiliser Maven, il faut respecter quelques règles comme l’utilisation d’un fichier XML nommé pom.xml à la racine du projet, la structure du projet, etc…&lt;/p&gt;
+
+&lt;p&gt;Ces règles sont definies dans le SuperPOM, il se trouve dans un fichier jar (MAVEN_HOME/lib/maven-model-builder-x.y.z/org/apache/maven/model/pom-4.0.0.xml)&lt;/p&gt;
+
+&lt;h2 id=&quot;pom-projet-object-model&quot;&gt;POM (Projet Object Model)&lt;/h2&gt;
+&lt;p&gt;Le pom.xml est le fichier qui décrit ce que Maven doit faire.&lt;/p&gt;
+
+&lt;p&gt;Voici le contenu créé par la ligne de commande ci-dessus :&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;project&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://maven.apache.org/POM/4.0.0&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:xsi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;xsi:schemaLocation=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;modelVersion&amp;gt;&lt;/span&gt;4.0.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/modelVersion&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;io.rasologg.tutoriel&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;java-maven-project&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;packaging&amp;gt;&lt;/span&gt;jar&lt;span class=&quot;nt&quot;&gt;&amp;lt;/packaging&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.0-SNAPSHOT&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;java-maven-project&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;http://maven.apache.org&lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.8.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/project&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Le fichier XML commence par le tag “project” et doit respecter le schema XSD indiqué.&lt;/p&gt;
+
+&lt;h3 id=&quot;modelversion&quot;&gt;modelVersion&lt;/h3&gt;
+
+&lt;p&gt;modelVersion est obligatoire et contient toujours “4.0.0” qui correspond à la version du model qu’on a vu dans le SuperPOM. Cette valeur existe depuis la version 2.x de Maven.&lt;/p&gt;
+
+&lt;p&gt;Avec Maven 1.x, le modelVersion est “3.0.0”.&lt;/p&gt;
+
+&lt;p&gt;La “5.0.0” est actuellement en status “brouillon” (Draft) https://cwiki.apache.org/confluence/display/MAVEN/POM+Model+Version+5.0.0&lt;/p&gt;
+
+&lt;h3 id=&quot;maven-coordinates&quot;&gt;Maven coordinates&lt;/h3&gt;
+
+&lt;p&gt;Maven utilise trois tags (groupId, artifactId, version) pour identifier un projet.&lt;/p&gt;
+
+&lt;p&gt;Le &lt;em&gt;groupId&lt;/em&gt; permet de grouper tous les projet par entité, souvent le nom de domaine inversé de la société ou la personne qui a developpé le projet.&lt;/p&gt;
+
+&lt;p&gt;Le tag &lt;em&gt;artifactId&lt;/em&gt; c’est le nom du projet.&lt;/p&gt;
+
+&lt;p&gt;le tag &lt;em&gt;version&lt;/em&gt; comme son nom l’indique, c’est pour preciser la version du projet, generalement on suit le &lt;a href=&quot;https://semver.org/&quot;&gt;SemVer&lt;/a&gt; x.y.z mais on peut y ajouter un “qualifier” x.y.z-qualifier. Un qualifier specifique utile pendant le developpement est le “SNAPSHOT”, le SNAPSHOT permet d’indiquer à Maven que le projet est en cours de developpement.&lt;/p&gt;
+
+&lt;h3 id=&quot;autres-tags&quot;&gt;Autres tags&lt;/h3&gt;
+
+&lt;p&gt;Le packaging est le type d’archivage utilisé pour le projet : jar, war, rar.&lt;/p&gt;
+
+&lt;p&gt;Les autres tag : &lt;em&gt;name&lt;/em&gt;, &lt;em&gt;url&lt;/em&gt; sont optionnels, on peut ajouter aussi le tag &lt;em&gt;description&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Le tag &lt;em&gt;dependencies&lt;/em&gt; permet d’ajouter tous les dependences utilisés par le projet, dans notre cas, on a “junit” ajouté par défaut pour les tests unitaires.&lt;/p&gt;
+
+&lt;p&gt;Tout au long de l’evolution, on ajoutera autant de &lt;em&gt;“dependency”&lt;/em&gt; que necessaire, par exemple pour utiliser une base de données.&lt;/p&gt;
+
+&lt;h2 id=&quot;maven-repository&quot;&gt;Maven repository&lt;/h2&gt;
+
+&lt;p&gt;Un repository est un serveur distant où la communauté open source partage d’autres projets, et à partir duquel on peut télécharger les projets qu’on a besoin pour construire notre application.&lt;/p&gt;
+
+&lt;p&gt;Trois types de repository : local, central et remote.&lt;/p&gt;
+
+&lt;p&gt;Local se trouve sur la machine de developpement, par défaut il se trouve dans le repertoire USER_HOME/.m2/&lt;/p&gt;
+
+&lt;p&gt;Central est le repository par défaut utilisé par Maven, l’adresse de ce repository se trouve dans le superPOM et qui est https://repo.maven.apache.org/maven2.&lt;/p&gt;
+
+&lt;p&gt;Remote autres repository public, accessible via Internet ou privé interne à l’entreprise.&lt;/p&gt;
+
+&lt;h2 id=&quot;comment-compiler-et-tester-le-projet&quot;&gt;Comment compiler et tester le projet&lt;/h2&gt;
+
+&lt;p&gt;Avant de compiler, modifions un peu notre fichier “pom.xml” en y ajoutant quelques “properties”&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;url&amp;gt;&lt;/span&gt;http://maven.apache.org&lt;span class=&quot;nt&quot;&gt;&amp;lt;/url&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;project.build.sourceEncoding&amp;gt;&lt;/span&gt;UTF-8&lt;span class=&quot;nt&quot;&gt;&amp;lt;/project.build.sourceEncoding&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;maven.compiler.source&amp;gt;&lt;/span&gt;11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/maven.compiler.source&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;maven.compiler.target&amp;gt;&lt;/span&gt;11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/maven.compiler.target&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ces proprietes nous permettent de configurer l’encodage en “UTF-8”, de specifier la version du compilateur java qu’on souhaite utiliser.
+Et maintenant, lançons la commande pour compiler :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn compile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-log&quot;&gt;[INFO] Scanning for projects...
+[INFO]
+[INFO] --------------&amp;lt; io.rasologg.tutoriel:java-maven-project &amp;gt;---------------
+[INFO] Building java-maven-project 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ java-maven-project ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /workspace/tuto/java-maven-project/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ java-maven-project ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /workspace/tuto/java-maven-project/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.380 s
+[INFO] Finished at: 2021-04-04T18:17:37+02:00
+[INFO] ------------------------------------------------------------------------
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Un nouveau repertoire “target” vient d’être créé pour contenir les fichiers compilés qui sont le “.class”.&lt;/p&gt;
+
+&lt;p&gt;Pour lancer les tests unitaires :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn test
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;La commande “test” lance automatiquement la compilation aussi, c’est le cycle de vie d’une commande dans Maven.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[INFO] Scanning for projects...
+[INFO]
+...
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running io.rasologg.tutoriel.AppTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.808 s
+[INFO] Finished at: 2021-04-04T18:26:38+02:00
+[INFO] ------------------------------------------------------------------------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et maintenant pour “packager” notre application, il suffit tout simplement de lancer la commande:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Un fichier jar est créé dans le repertoire “target”.&lt;/p&gt;
+
+&lt;p&gt;Pour supprimer le repertoire “target”&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn clean
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On peut enchainer des commandes&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn clean package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et si on souhaite eviter l’execution des tests (chose qu’il faut absolument eviter mais ça arrive de vouloir packager sans passer par une étape de test unitaire qui peut être très long si le projet est assez compliqué)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn clean package -DskipTests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;cycle-de-vie-dun-build-maven&quot;&gt;Cycle de vie d’un build maven&lt;/h1&gt;
+
+&lt;p&gt;Maven n’est pas seulement pour gérer les dependances d’un projet mais il gere aussi les differentes étapes de la construction d’une application. Maven gere ces differentes via des plugins et en suivante une cycle de vie bien defini : validate -&amp;gt; compile -&amp;gt; test -&amp;gt; package -&amp;gt; verify -&amp;gt; install -&amp;gt; deploy.&lt;/p&gt;
+
+&lt;p&gt;validate : verifier la structure du projet
+compile : compiler le code source
+test : lancer les tests unitaires
+package : créer un package contenant le code source compilé
+verify : lancer les tests d’integration
+install : copier le package dans le repository local 
+deploy : transferer le package vers un repository distant.&lt;/p&gt;
+
+&lt;h1 id=&quot;comment-chercher-les-dependences&quot;&gt;Comment chercher les dependences&lt;/h1&gt;
+
+&lt;p&gt;https://search.maven.org/&lt;/p&gt;
+
+&lt;p&gt;https://mvnrepository.com/&lt;/p&gt;
+
+&lt;h1 id=&quot;dependences-transitives&quot;&gt;Dependences transitives&lt;/h1&gt;
+
+&lt;p&gt;Une dependence peut dependre d’autres projets, Maven recupere automatiques ces autres projets lors de la compilation.&lt;/p&gt;
+
+&lt;p&gt;Par exemplem, si on ajoute la libraire “hibernate-core” dans notre projet, celle-ci emmenera d’autres libraires dans notre projet.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.8.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.hibernate&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;hibernate-core&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;6.0.0.Alpha7&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ceci peut nous emmener des dependences qu’on ne souhaite pas, qu’on n’a pas besoin dans notre projet, Maven nous propose une solution pour exclure ces dependences.&lt;/p&gt;
+
+&lt;h1 id=&quot;exclure-les-dependences&quot;&gt;Exclure les dependences&lt;/h1&gt;
+
+&lt;p&gt;Pour exclure les dependences, on peut utiliser le tag exclusions/exclusion:&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.8.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class=&quot;nt&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.hibernate&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;hibernate-core&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;6.0.0.Alpha7&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;exclusions&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;exclusion&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.logging&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+          &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jboss-logging&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/exclusion&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/exclusions&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;dependency-mediation&quot;&gt;Dependency mediation&lt;/h1&gt;
+
+&lt;p&gt;S’il y a un conflit sur la version d’une dependance, Maven utilise la plus proche du graphe de dependances (nearest definition).&lt;/p&gt;
+
+&lt;p&gt;Par exemple, le projet A depend des deux projets B et C la version 2.0, et B depend aussi du projet C mais la version 1.1, Maven choisira la version 2.0 du projet C.&lt;/p&gt;
+
+&lt;h1 id=&quot;dependance-cyclique&quot;&gt;Dependance cyclique&lt;/h1&gt;
+
+&lt;p&gt;Un projet A depend du projet B et B depend de A, est une dependance cyclique. Maven ne peut pas gerer ce genre de dependance.&lt;/p&gt;
+
+&lt;h1 id=&quot;scope&quot;&gt;Scope&lt;/h1&gt;
+
+&lt;p&gt;Un autre moyen de filtrer les dependences, on peut utiliser le “scope”, par exemple des dependences qui ne sont utiles que pour les tests unitaires seulement, on peut ajouter le scope “test”.&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;junit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.8.1&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class=&quot;nt&quot;&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;La valeur par défaut d’un scope est “compile”, d’autres valeurs sont possible : runtime, provided&lt;/p&gt;
+
+&lt;h1 id=&quot;version&quot;&gt;Version&lt;/h1&gt;
+
+&lt;p&gt;La methode la plus simple et la plus sur est de specifier une valeur fixe de la version de dependence, mais Maven nous permet d’ajouter un peu plus de flexibilité&lt;/p&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;[4.1,]&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- la version la plus recente après 4.1--&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;[4.1,4.5]&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- la version la plus recente entre 4.1 et 4.5 --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;[4.1,4.5)&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- la version entre 4.1 et avant la 4.5, 4.5 exclue --&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;[,4.5]&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- le maximum 4.5 --&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;effective-pom&quot;&gt;Effective POM&lt;/h1&gt;
+
+&lt;p&gt;Plus haut on a parlé d’un Super POM, la configuration par défaut de Maven. Ce super POM est ajouté automatiquement par Maven au projet, qui nous donne l’effective POM.&lt;/p&gt;
+
+&lt;p&gt;A noter que le contenu du super pom peut être surcharger par le pom du projet.&lt;/p&gt;
+
+&lt;p&gt;On peut regarder l’effective pom via la ligne de commande suivante :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:effective-pom -output=effective-pom.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;comment-fonctionner-maven-architecture&quot;&gt;Comment fonctionner Maven (architecture)&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;./maven-architecture.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne Maven&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:effective-settings -Doutput=effective-settings.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;plugins&quot;&gt;Plugins&lt;/h1&gt;
+&lt;p&gt;Les plugins apportent beaucoup d’outil utile pour le projet, par exemple pour compiler, pour executer les tests.
+Par défaut Maven ajoute beaucoup de plugins venant du superPOM, et certaines configurations ne nous conviennent pas, et pour resoudre ce probleme il suffit de surcharger la configuration.&lt;/p&gt;
+
+&lt;p&gt;Par exemple, pour changer la version de Java, on surcharge la configuration du plugin maven-compiler-plugin&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;build&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;plugins&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;maven-compiler-plugin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&amp;gt;&lt;/span&gt;11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/source&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;target&amp;gt;&lt;/span&gt;11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/target&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/plugins&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/build&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;multi-modules&quot;&gt;Multi-modules&lt;/h1&gt;
+&lt;p&gt;Techniquement on peut avoir un projet Java composé d’un seul module (un seul pom.xml), mais au fur et à mesure de l’evolution du projet, une restructuration est necessaire, par exemple les codes qui gere l’accès aux données dans un repertoire et les codes qui gerent la logique metier dans un autre repertoire.
+C’est pour gérer ce genre de problematique que Maven propose le multi-module.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;projet-parent
+├── pom.xml
+    ├── module1
+         ├── pom.xml
+    ├── module2
+         ├── pom.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;packaging-avec-jib&quot;&gt;Packaging avec Jib&lt;/h1&gt;
+
+&lt;p&gt;Le packaging est le type d’archivage utilisé pour le projet : jar, war, rar. Avant l’utilisation du Cloud et la conteneurisation, on utilise le war ou la jar pour deployer l’application.&lt;/p&gt;
+
+&lt;p&gt;Avec l’architecture Cloud Native, le packaging final est maintenant une image conteneur (image docker). Cette image peut être construite de differente façon, via un fichier Dockerfile, mais dans le cadre de Maven, on s’interesse au plugi &lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Jib est un plugin Maven developpé par Google qui permet de créer une image conteneur en mode 100% Java. Via un Dockerfile, on est obligé d’installer l’application Docker parce qu’on a besoin du demon docker.&lt;/p&gt;
+
+&lt;h1 id=&quot;astuces&quot;&gt;Astuces&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:describe -Ddetail=true -Dplugin=compiler
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:help -Ddetail=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Introduction</summary></entry><entry><title type="html">Kubernetes pour les developpeurs</title><link href="/blog/2021/04/16/kubernetes-pour-les-developpeurs.html" rel="alternate" type="text/html" title="Kubernetes pour les developpeurs" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/kubernetes-pour-les-developpeurs</id><content type="html" xml:base="/blog/2021/04/16/kubernetes-pour-les-developpeurs.html">&lt;h1 id=&quot;image&quot;&gt;Image&lt;/h1&gt;
+
+&lt;p&gt;Un ensemble de fichiers et repertoires construit au dessus d’un mini-noyaux linux. C’est une encapsule d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement.&lt;/p&gt;
+
+&lt;p&gt;Lors de l’execution sur une machine, image devient un conteneur, un conteneur est une instance d’une image.&lt;/p&gt;
+
+&lt;p&gt;Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile. D’autres outils sont aussi disponible pour construire une image.&lt;/p&gt;
+
+&lt;p&gt;Voici un exemple d’un Dockerfile :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM nginx:alpine
+MAINTAINER Gégé Rasolo
+COPY index.html /usr/share/nginx/html/index.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Une image un ensemble des couches et construit à partir d’une image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.&lt;/p&gt;
+
+&lt;p&gt;Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”, ceci ordonne à l’outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).&lt;/p&gt;
+
+&lt;p&gt;Par exemple, l’image &lt;a href=&quot;https://github.com/docker-library/busybox/blob/master/Dockerfile.template&quot;&gt;busybox&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM scratch
+ADD busybox.tar.xz /
+CMD [&quot;sh&quot;]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Google a developpé un outil open-source, 100% Java, &lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt; pour construire facilement une image sans avoir besoin d’un daemon comme Docker.&lt;/p&gt;
+
+&lt;h1 id=&quot;conteneur&quot;&gt;Conteneur&lt;/h1&gt;
+
+&lt;p&gt;Un conteneur est une instance d’une image. Si on compate à la programmation orienté objet, image est un “Class”, un conteneur est un “object”.&lt;/p&gt;
+
+&lt;p&gt;Le conteneur peut fonctionner sur n’importe quel système compatible, sur n’importe quel Cloud, sans aucun changement.&lt;/p&gt;
+
+&lt;p&gt;Pour demarrer un conteneur, il faut un “runtime”, ce conteneur “runtime” permet à l’application (conteneur) de communiquer à la machine hôte et donc d’utiliser les resources necessaires (CPU, RAM, Disque, Reseaux).&lt;/p&gt;
+
+&lt;p&gt;Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-container.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne un conteneur&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.&lt;/p&gt;
+
+&lt;p&gt;Au sein du “runtime”, chaque conteneur est isolé par le concept de “namespaces”. Cette isolation s’applique sur le reseau (network), fichier (file), utilisateurs (users), processus (processes), et les communications inter-processus (IPCs).&lt;/p&gt;
+
+&lt;p&gt;L’utilisation d’un conteneur est standardisé et suit la specification d’OCI (Open Containers Initiative) https://opencontainers.org. Ce qui permet de deployer et executer n’importe quel conteneur sur n’impore quel “runtime”.&lt;/p&gt;
+
+&lt;p&gt;On peut télécharger une image depuis des plateformes comme https://hub.docker.com/, https://quay.io/, et bien d’autres.&lt;/p&gt;
+
+&lt;p&gt;L’exemple suivant nous montre comment on lance un conteneur à partir de l’image “nginx:1.19”. Sachant que j’utilise le “runtime” docker sur mon ordinateur, le “runtime” télécharge automatiquement l’image depuis la plateforme docker.io si l’image n’est pas disponible en local. C’est comme si on écrit (docker.io/nginx:1.19 à la place de nginx:1.19 seulement)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run --name mon-serveur-web -d nginx:1.19
+Unable to find image 'nginx:1.19' locally
+1.19: Pulling from library/nginx
+75646c2fb410: Pull complete
+6128033c842f: Pull complete
+71a81b5270eb: Pull complete
+b5fc821c48a1: Pull complete
+da3f514a6428: Pull complete
+3be359fed358: Pull complete
+Digest: sha256:bae781e7f518e0fb02245140c97e6ddc9f5fcf6aecc043dd9d17e33aec81c832
+Status: Downloaded newer image for nginx:1.19
+99d68c4d2eb755d3c094084d46006c26bf6f32ebf133fe436b9fadc6739b7163
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et pour vérifier que notre serveur web Nginx est maintenant lancé :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker ps
+99d68c4d2eb7   nginx:1.19                       &quot;/docker-entrypoint.…&quot;   30 seconds ago   Up 29 seconds   80/tcp    mon-serveur-web
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;kubernetes&quot;&gt;Kubernetes&lt;/h1&gt;
+
+&lt;p&gt;Un systeme d’information contient majoritairement beaucoup d’applications, et donc beaucoup de conteneurs à deployer, ça peut être deployée sur une seule grosse machine (pas vraiment une bonne idée), ça peut être sur plusieures machines en mode cluster ou sur le cloud.&lt;/p&gt;
+
+&lt;p&gt;Plusieurs solutions sont possible mais nous nous interessons sur Kubernetes qui est devenu, de facto, le systeme d’orchestration des conteneurs.&lt;/p&gt;
+
+&lt;p&gt;Mais à titre d’information, on peut utiliser :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;Docker compose&lt;/a&gt; permet de déployer plusieurs conteneurs sur une seule machine en une seule commande, encore fois, n’est une bonne idée pour la production.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/swarm/&quot;&gt;Docker swarm&lt;/a&gt; on peut dire que c’est le concurrent de Kubernetes, simple à mettre en place.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Developpée par Google, rendu public en 2014 et premier release en 2015 et maintenant appartient à la fondation Linux. Kubernetes est developpé en &lt;a href=&quot;https://golang.org/&quot;&gt;GoLang&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;https://research.google/pubs/pub43438/&lt;/p&gt;
+
+&lt;p&gt;Comme les projets Linux, il y a beaucoup de distribution de Kubernetes, on peut utiliser la distribution originale “Kubernetes Vanilla”, gérée par la communauté,  mais on peut aussi choisir d’autres distributions comme OpenShift de chez RedHat etc… https://kubernetes.io/fr/docs/setup/pick-right-solution/&lt;/p&gt;
+
+&lt;p&gt;Si on simplifie, Kubernetes est un RESTful API qui expose toutes les operations possibles à faire sur sa base de données, qui est une base de données NoSQL ETCD.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-api-server.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne l'api de kubernetes&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;dashbord&quot;&gt;dashbord&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/&quot;&gt;Kubernest dashboard&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Kubernetes IDE comme &lt;a href=&quot;https://k8slens.dev/&quot;&gt;Lens&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;kubectl&quot;&gt;kubectl&lt;/h2&gt;
+&lt;p&gt;L’outil pour administrer Kubernetes, kubectl est basé sur curl.&lt;/p&gt;
+
+&lt;p&gt;https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+https://kubectl.docs.kubernetes.io/&lt;/p&gt;
+
+&lt;h2 id=&quot;curl&quot;&gt;curl&lt;/h2&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl proxy --port=8001 &amp;amp;
+curl http://localhost:8001
+curl http://localhost:8001/api/v1/namespaces/default/pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;architecture-de-kubernetes&quot;&gt;Architecture de Kubernetes&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-architecture.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne l'api de kubernetes&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;lapi-kube-apiserver&quot;&gt;L’API (kube-apiserver)&lt;/h2&gt;
+
+&lt;p&gt;Toutes les fonctionnalités de Kubernetes sont accessible via API RESTful.&lt;/p&gt;
+
+&lt;p&gt;Plusieurs API-Resources : apps, networking, storage, …&lt;/p&gt;
+
+&lt;p&gt;Tous les 3 mois il y a un update d’API, il faut bien identifier la version à utiliser.&lt;/p&gt;
+
+&lt;h2 id=&quot;lorchestrateur-kube-scheduler&quot;&gt;L’orchestrateur (kube-scheduler)&lt;/h2&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+
+&lt;h2 id=&quot;le-controlleur-kube-controller-manager&quot;&gt;Le Controlleur (kube-controller-manager)&lt;/h2&gt;
+
+&lt;p&gt;On peut resumer son rôle avec le bout de code ci-dessous :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for {
+    desired := getDesiredState()
+    current := getCurrentState()
+    makeChanges(desired, current)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;lagent-kubelet&quot;&gt;L’agent (kubelet)&lt;/h2&gt;
+
+&lt;p&gt;L’agent de Kubernetes qui se trouvent sur chaque noeuds du clusteur. Cet agent qui recoit et execute les ordres venant de l’orchestrateur. Il remonte aussi toutes les informations au master via l’API et ces informations sont stockées dans la base de données ETCD.&lt;/p&gt;
+
+&lt;h2 id=&quot;kubeproxy&quot;&gt;kubeproxy&lt;/h2&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+
+&lt;h2 id=&quot;etcd&quot;&gt;ETCD&lt;/h2&gt;
+
+&lt;p&gt;//TODO&lt;/p&gt;
+
+&lt;h1 id=&quot;deployer-un-mini-cluster-kubernetes-pour-le-developpement&quot;&gt;Deployer un mini-cluster Kubernetes pour le developpement&lt;/h1&gt;
+
+&lt;p&gt;Plusieurs solutions sont disponibles :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.docker.com/products/docker-desktop&quot;&gt;DockerDesktop&lt;/a&gt; : simple et facile à mettre en place pour Windows et MacOS.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://minikube.sigs.k8s.io/docs/start/&quot;&gt;Minikube&lt;/a&gt; pour Linux, macOS et windows.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Personnellement, je travaille sur DockerDesktop pour macOS&lt;/p&gt;
+
+&lt;h2 id=&quot;quelques-commandes-pour-tester-notre-cluster&quot;&gt;Quelques commandes pour tester notre cluster&lt;/h2&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Client Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;, GitVersion:&quot;v1.19.7&quot;, GitCommit:&quot;1dd5338295409edcfff11505e7bb246f0d325d15&quot;, GitTreeState:&quot;clean&quot;, BuildDate:&quot;2021-01-13T13:23:52Z&quot;, GoVersion:&quot;go1.15.5&quot;, Compiler:&quot;gc&quot;, Platform:&quot;darwin/amd64&quot;}
+Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;, GitVersion:&quot;v1.19.7&quot;, GitCommit:&quot;1dd5338295409edcfff11505e7bb246f0d325d15&quot;, GitTreeState:&quot;clean&quot;, BuildDate:&quot;2021-01-13T13:15:20Z&quot;, GoVersion:&quot;go1.15.5&quot;, Compiler:&quot;gc&quot;, Platform:&quot;linux/amd64&quot;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Deployer et lancer rapidement un pod (methode imperative)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl run mynginx --image=nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod/mynginx created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get all
+NAME          READY   STATUS    RESTARTS   AGE
+pod/mynginx   1/1     Running   0          3m26s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    &amp;lt;none&amp;gt;        443/TCP   37m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;les-principaux-objets-utilisés-par-kubernetes&quot;&gt;Les principaux objets utilisés par Kubernetes&lt;/h1&gt;
+
+&lt;h2 id=&quot;pods&quot;&gt;Pods&lt;/h2&gt;
+&lt;p&gt;Est une abstration d’un serveur.  Un pod peut contenir plusieurs conteneurs dans un seul namespace et ils sont exposé via une seule adresse IP.&lt;/p&gt;
+
+&lt;p&gt;En production, un pod ne doit pas être demarré tout seul, il ne sera pas redeployer quand le noeud s’arrete. Un pod peut être créé à partir d’un deploiment, job ou cronjob.&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mynginx&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;default&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mynginx&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx:latest&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl explain pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl explain pods.spec
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Generalement, un pod contient un seul conteneur mais, dans certains cas on a besoin de lancer multiples conteneurs dans un pod:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;init container : pour initialiser une configuration par exemple&lt;/li&gt;
+  &lt;li&gt;sidecar container : produire des fonctionnalités supplementaires au conteneur principal, par exemple gestion des logs, synchronisation, metriques, tracing&lt;/li&gt;
+  &lt;li&gt;ambassador container&lt;/li&gt;
+  &lt;li&gt;adapter container&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;initcontainers&quot;&gt;InitContainers&lt;/h3&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;initcontainer-example&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;initContainers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;sleepy&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;alpine&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;sleep'&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;20'&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;web&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;comment-investiguer-un-probleme-dans-un-pod-&quot;&gt;Comment investiguer un probleme dans un pod ?&lt;/h3&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl describe pod podname 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Lit le status courant du pod dans la base de données etcd.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl logs podname
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Lit le contenu stdout du pod, s’il y a plusieurs conteneurs il faut ajouter l’option -c avec le nom du conteneur&lt;/p&gt;
+
+&lt;p&gt;kubectl exec (executer une commande dans un conteneur, s’il y a plusieurs conteneurs il faut ajouter l’option -c)&lt;/p&gt;
+
+&lt;p&gt;kubectl get pods –all-namespaces -o wide&lt;/p&gt;
+
+&lt;h3 id=&quot;securitycontext-dun-pod&quot;&gt;securityContext d’un pod&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; 
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginxsecure&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;securityContext&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;runAsNonRoot&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;tester-laccessibilité-dun-pod&quot;&gt;Tester l’accessibilité d’un pod&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl port-forward pod/podname port_externe:port_interne
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;limitation-des-resources-utilisé-par-un-pod&quot;&gt;Limitation des resources utilisé par un pod&lt;/h3&gt;
+
+&lt;p&gt;Par defaut un pod utilise autant de CPU et memoire pour faire son travail.
+On peut controler l’utilisation des resources via pod.spec.containers.resources.&lt;/p&gt;
+
+&lt;p&gt;CPU : millicore (m), 1000m est l’equivalent d’un 1 CPU.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;requests:
+limits:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;deployments&quot;&gt;Deployments&lt;/h2&gt;
+
+&lt;p&gt;Une entité pour standardiser la gestion des pods. Un deployment crée un replicaset automatiquement.&lt;/p&gt;
+
+&lt;p&gt;Un deploiement permet de gerer le scalabilité de l’application, la strategie de mise à jour et l’historique.&lt;/p&gt;
+
+&lt;p&gt;Si un pod tombe en panne, le deploiement crée automatique un autre.&lt;/p&gt;
+
+&lt;h2 id=&quot;services&quot;&gt;Services&lt;/h2&gt;
+
+&lt;h2 id=&quot;ingress&quot;&gt;Ingress&lt;/h2&gt;
+
+&lt;h2 id=&quot;persistent-volumes&quot;&gt;Persistent Volumes&lt;/h2&gt;
+
+&lt;h2 id=&quot;jobs&quot;&gt;Jobs&lt;/h2&gt;
+
+&lt;p&gt;Pour executer une tache pendant un certain temps defini.&lt;/p&gt;
+
+&lt;p&gt;3 differentes type de jobs :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;non-parallel jobs : completions=1 parallelism=1&lt;/li&gt;
+  &lt;li&gt;Parallel jobs : completions=n, parallelism=m&lt;/li&gt;
+  &lt;li&gt;Parallel jobs avec un queue : completions=1, parallelism=n&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;cronjobs&quot;&gt;Cronjobs&lt;/h2&gt;
+
+&lt;h2 id=&quot;namespace&quot;&gt;Namespace&lt;/h2&gt;
+&lt;p&gt;Pour isoler les ressources dans le cluster. Par défaut, Kubernetes crée plusieurs namespaces : default, kube-node-lease, kube-public, kube-system.&lt;/p&gt;
+
+&lt;p&gt;Pour créer un namespace :&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl create ns ci-env
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Pour lancer une requete d’un namespace, on utilise l’option “-n”&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl -n namespace get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Lister tous les namespaces&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get ns
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get pods --all-namespaces
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;autorisation-et-permission&quot;&gt;Autorisation et permission&lt;/h1&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl auth can-i get pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl auth can-i get pods --as toto@test.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;comment-on-developpe-pour-kubernetes-&quot;&gt;Comment on developpe pour Kubernetes ?&lt;/h1&gt;
+
+&lt;p&gt;Build l’application -&amp;gt; La conteneuriser -&amp;gt; La deployer et executer sur K8S&lt;/p&gt;
+
+&lt;h2 id=&quot;developpement-continue-avec-skaffold&quot;&gt;developpement continue avec Skaffold&lt;/h2&gt;
+&lt;p&gt;https://skaffold.dev/&lt;/p&gt;
+
+&lt;h1 id=&quot;operator&quot;&gt;Operator&lt;/h1&gt;
+
+&lt;p&gt;un moyen d’etendre les ressources que l’API Serveur de Kubernetes peut gerer. On appelle ceci CRD (Custom Resource Definitions).&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Image</summary></entry><entry><title type="html">Kubernetes monitoring</title><link href="/blog/2021/04/01/kubernetes-monitoring.html" rel="alternate" type="text/html" title="Kubernetes monitoring" /><published>2021-04-01T13:33:29+02:00</published><updated>2021-04-01T13:33:29+02:00</updated><id>/blog/2021/04/01/kubernetes-monitoring</id><content type="html" xml:base="/blog/2021/04/01/kubernetes-monitoring.html">&lt;h1 id=&quot;installer-prometheus-operator-pour-kubernetes&quot;&gt;Installer Prometheus Operator pour Kubernetes&lt;/h1&gt;
+
+&lt;p&gt;Installer l’operateur via la ligne de commande suivante, si vous voulez specifier un autre namespace que le default, vous pouvez ajouter le “-n votre_namespace”&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/master/bundle.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ça devrait afficher les messages suivants&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;customresourcedefinition.apiextensions.k8s.io/alertmanagerconfigs.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/alertmanagers.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/podmonitors.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/probes.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/prometheuses.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/prometheusrules.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/servicemonitors.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/thanosrulers.monitoring.coreos.com created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus-operator created
+clusterrole.rbac.authorization.k8s.io/prometheus-operator created
+deployment.apps/prometheus-operator created
+serviceaccount/prometheus-operator created
+service/prometheus-operator created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pour vérifier que l’operateur est bien installé&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+prometheus-operator   0/1     1            0           10s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Maintenant on peut configurer le RBAC, afin d’autoriser Prometheus à acceder à l’API de Kubernetes.
+Créer un fichier prometheus_rbac.yaml et ajouter le contenu ci-dessus :&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ServiceAccount&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ClusterRole&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;apiGroups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodes&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodes/metrics&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;services&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;endpoints&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pods&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;verbs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;get&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;list&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;watch&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;apiGroups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configmaps&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;verbs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;get&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;apiGroups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;networking.k8s.io&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ingresses&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;verbs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;get&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;list&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;watch&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;nonResourceURLs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/metrics&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;verbs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;get&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;rbac.authorization.k8s.io/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ClusterRoleBinding&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;roleRef&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;apiGroup&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;rbac.authorization.k8s.io&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ClusterRole&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;subjects&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ServiceAccount&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;default&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ensuite, executer la commande suivante&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f prometheus_rbac.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On devrait avoir des messages comme ci-dessous&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;serviceaccount/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Créer un fichier YAML pour deployer prometheus (par exemple prometheus.yaml) contenant le code ci-dessous&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;monitoring.coreos.com/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;quay.io/prometheus/prometheus:v2.22.1&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;nodeSelector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;kubernetes.io/os&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;linux&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;replicas&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;400Mi&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;securityContext&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;fsGroup&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2000&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;runAsNonRoot&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;runAsUser&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1000&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;serviceAccountName&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v2.22.1&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;serviceMonitorSelector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;{}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ensuite, lancer la commande&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f prometheus.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;prometheus.monitoring.coreos.com/prometheus created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On vérifie&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get prometheus
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;On devrait obtenir le resultat suivant&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME         VERSION   REPLICAS   AGE
+prometheus   v2.22.1   2          12s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et une autre commande&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get pod -l app=prometheus
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Et un autre resultat :-)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME                      READY   STATUS    RESTARTS   AGE
+prometheus-prometheus-0   2/2     Running   1          69s
+prometheus-prometheus-1   2/2     Running   1          69s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et une derniere étape pour exposer le service afin que prometheus soit accessible via Grafana. 
+Créer un autre fichier YAML, nommer le comme vous le voulez, par prometheus_service.yaml&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Service&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;web&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;9090&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;targetPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;web&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;prometheus&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;sessionAffinity&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ClientIP&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et on applique le fichier&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply -f prometheus_service.yaml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;qui devrait afficher ce message&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;service/prometheus created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et on vérifie si tout va bien&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes            ClusterIP   10.96.0.1        &amp;lt;none&amp;gt;        443/TCP    72m
+prometheus            ClusterIP   10.107.134.128   &amp;lt;none&amp;gt;        9090/TCP   11s
+prometheus-operated   ClusterIP   None             &amp;lt;none&amp;gt;        9090/TCP   2m26s
+prometheus-operator   ClusterIP   None             &amp;lt;none&amp;gt;        8080/TCP   5m56s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et voilà, on a un prometheus UP&amp;amp;RUNNING ;-) mais sans Grafana le travail n’est pas bien fait.&lt;/p&gt;
+
+&lt;p&gt;Pour installer Grafana, on passe par Helm, il faut installer Helm si vous ne l’avez pas encore.&lt;/p&gt;
+
+&lt;p&gt;Ajoutons le repo de bitnami&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ensuite, on installe grafana, en mode quickstart ;-)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;helm install grafana bitnami/grafana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ça devrait afficher un message de ce type&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME: grafana
+LAST DEPLOYED: Thu Apr  8 17:32:32 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+** Please be patient while the chart is being deployed **
+
+1. Get the application URL by running these commands:
+    echo &quot;Browse to http://127.0.0.1:8080&quot;
+    kubectl port-forward svc/grafana 8080:3000 &amp;amp;
+
+2. Get the admin credentials:
+
+    echo &quot;User: admin&quot;
+    echo &quot;Password: $(kubectl get secret grafana-admin --namespace default -o jsonpath=&quot;{.data.GF_SECURITY_ADMIN_PASSWORD}&quot; | base64 --decode)&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Installer Prometheus Operator pour Kubernetes</summary></entry><entry><title type="html">Kubernetes: gestion de secrets</title><link href="/blog/2021/03/16/kubernetes-secrets.html" rel="alternate" type="text/html" title="Kubernetes: gestion de secrets" /><published>2021-03-16T12:33:29+01:00</published><updated>2021-03-16T12:33:29+01:00</updated><id>/blog/2021/03/16/kubernetes-secrets</id><content type="html" xml:base="/blog/2021/03/16/kubernetes-secrets.html">&lt;h1 id=&quot;la-gestion-des-secrets-dans-kubernetes-à-lépoque-de-gitops&quot;&gt;La gestion des secrets dans Kubernetes à l’époque de GitOps&lt;/h1&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Ces derniers temps, on attend de plus en plus parler de GitOps avec Kubernetes. Grosso modo, GitOps, c’est tout gérer via Git, 
+les fichiers de configuration, les fichiers de description de déploiement, et donc par conséquent les identifiants et mot de passe que les applications ont besoin pour fonctionner, 
+par exemple l’identifiant et mot de passe pour la base de données.&lt;/p&gt;
+
+&lt;p&gt;Mettre ces informations directement sur Git n’est pas vraiment une bonne idée, de point de vue sécurité, et beaucoup d’entreprise continue à gérer les secrets manuellement via une commande kubectl et stocker les identifiants et mot de passe dans un outil comme keepass.
+Et ceci déroge au concept de GitOps.&lt;/p&gt;
+
+&lt;p&gt;Pour répondre à ce problématique que la fondation CNCF étudie les outils suivants afin de les inclure dans l’éco-système cloud-native :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.vaultproject.io/&quot;&gt;Hashicorp Vault&lt;/a&gt;, &lt;a href=&quot;https://aws.amazon.com/fr/secrets-manager/&quot;&gt;AWS Secrets Manager&lt;/a&gt;, Certificate Manager, AWS KMS&lt;/li&gt;
+  &lt;li&gt;Bitnami Sealed Secret, Encrypted repositories&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cloud.google.com/solutions/secrets-management&quot;&gt;Google Secrets Management&lt;/a&gt;, &lt;a href=&quot;https://github.com/mozilla/sops&quot;&gt;Sops&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Plus d’info :
+https://www.cncf.io/announcements/2021/02/23/cncf-provides-insights-into-secrets-management-tools-with-latest-end-user-technology-radar/&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">La gestion des secrets dans Kubernetes à l’époque de GitOps</summary></entry><entry><title type="html">Python : developper avec Flask</title><link href="/blog/2021/01/15/developper-avec-python-flask.html" rel="alternate" type="text/html" title="Python : developper avec Flask" /><published>2021-01-15T12:33:29+01:00</published><updated>2021-01-15T12:33:29+01:00</updated><id>/blog/2021/01/15/developper-avec-python-flask</id><content type="html" xml:base="/blog/2021/01/15/developper-avec-python-flask.html">&lt;h2 id=&quot;developper-un-site-web-avec-python-flask&quot;&gt;Developper un site web avec Python Flask&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Installer Python. Un tutoriel interessant se trouve ici &lt;a href=&quot;https://realpython.com/installing-python&quot;&gt;RealPython&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Créer le repertoire de votre projet&lt;/li&gt;
+  &lt;li&gt;Entrer dans le repertoire et créer l’environnement virtuel (virtual env), comme suit :
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python3 &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt; venv venv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Le deuxieme “venv” peut être n’importe quoi, par exemple le nom du projet&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Activer le virtual env :
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;source venv/bin/activate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Une fois l’environnement virtuel est créé et activé, on n’a plus besoin de specifier la version de python, comme python3 ou pip3
+juste écrire python, pip et ça marchera&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Créer un fichier nommé requirements.txt et ajouter la ligne :
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flask
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Créer un autre fichier requirements-dev.txt
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-r requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Installer le framework
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install flask
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;Si vous utiliser un outil de developpement comme PyCharm, il detecte automatiquement le contenu du fichier requirements.txt et installe le framework à votre place&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Maintenant, vous pouvez commencer à écrire votre premier programme, commencez par créer un fichier, par exemple app.py, à l’interieur de ce fichier, ecrire le code ci-dessous :&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Bonjour le monde !&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;On sauvegarde et on peut lancer le programme. Tout d’abord, il faut specifier deux variables d’environnement FLASK_APP et FLASK_ENV&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export FLASK_APP=app #app correspond au nom de fichier qu'on a créé ci-dessus
+export FLASK_ENV=development
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;Maintenant, on lance le programme
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flask run
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Par défaut, Flask écoute sur le port 5000, si on souhaite specifier un autre si le 5000 est déjà utilisé&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;flask run -p 5001
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Developper un site web avec Python Flask</summary></entry></feed>

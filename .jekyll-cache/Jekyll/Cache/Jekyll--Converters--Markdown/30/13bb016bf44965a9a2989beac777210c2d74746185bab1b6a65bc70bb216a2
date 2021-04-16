@@ -1,0 +1,220 @@
+I"W8<h1 id="installer-prometheus-operator-pour-kubernetes">Installer Prometheus Operator pour Kubernetes</h1>
+
+<p>Installer l’operateur via la ligne de commande suivante, si vous voulez specifier un autre namespace que le default, vous pouvez ajouter le “-n votre_namespace”</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/master/bundle.yaml
+</code></pre></div></div>
+
+<p>ça devrait afficher les messages suivants</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>customresourcedefinition.apiextensions.k8s.io/alertmanagerconfigs.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/alertmanagers.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/podmonitors.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/probes.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/prometheuses.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/prometheusrules.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/servicemonitors.monitoring.coreos.com created
+customresourcedefinition.apiextensions.k8s.io/thanosrulers.monitoring.coreos.com created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus-operator created
+clusterrole.rbac.authorization.k8s.io/prometheus-operator created
+deployment.apps/prometheus-operator created
+serviceaccount/prometheus-operator created
+service/prometheus-operator created
+</code></pre></div></div>
+
+<p>Pour vérifier que l’operateur est bien installé</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get deploy
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+prometheus-operator   0/1     1            0           10s
+</code></pre></div></div>
+
+<p>Maintenant on peut configurer le RBAC, afin d’autoriser Prometheus à acceder à l’API de Kubernetes.
+Créer un fichier prometheus_rbac.yaml et ajouter le contenu ci-dessus :</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceAccount</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterRole</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="na">rules</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">apiGroups</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">"</span><span class="pi">]</span>
+  <span class="na">resources</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">nodes</span>
+  <span class="pi">-</span> <span class="s">nodes/metrics</span>
+  <span class="pi">-</span> <span class="s">services</span>
+  <span class="pi">-</span> <span class="s">endpoints</span>
+  <span class="pi">-</span> <span class="s">pods</span>
+  <span class="na">verbs</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">get"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">list"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">watch"</span><span class="pi">]</span>
+<span class="pi">-</span> <span class="na">apiGroups</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">"</span><span class="pi">]</span>
+  <span class="na">resources</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">configmaps</span>
+  <span class="na">verbs</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">get"</span><span class="pi">]</span>
+<span class="pi">-</span> <span class="na">apiGroups</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">networking.k8s.io</span>
+  <span class="na">resources</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">ingresses</span>
+  <span class="na">verbs</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">get"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">list"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">watch"</span><span class="pi">]</span>
+<span class="pi">-</span> <span class="na">nonResourceURLs</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/metrics"</span><span class="pi">]</span>
+  <span class="na">verbs</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">get"</span><span class="pi">]</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterRoleBinding</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="na">roleRef</span><span class="pi">:</span>
+  <span class="na">apiGroup</span><span class="pi">:</span> <span class="s">rbac.authorization.k8s.io</span>
+  <span class="na">kind</span><span class="pi">:</span> <span class="s">ClusterRole</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="na">subjects</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">kind</span><span class="pi">:</span> <span class="s">ServiceAccount</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">default</span>
+</code></pre></div></div>
+
+<p>Ensuite, executer la commande suivante</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f prometheus_rbac.yaml
+</code></pre></div></div>
+
+<p>On devrait avoir des messages comme ci-dessous</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>serviceaccount/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+</code></pre></div></div>
+
+<p>Créer un fichier YAML pour deployer prometheus (par exemple prometheus.yaml) contenant le code ci-dessous</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">monitoring.coreos.com/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Prometheus</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">quay.io/prometheus/prometheus:v2.22.1</span>
+  <span class="na">nodeSelector</span><span class="pi">:</span>
+    <span class="s">kubernetes.io/os</span><span class="pi">:</span> <span class="s">linux</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">resources</span><span class="pi">:</span>
+    <span class="na">requests</span><span class="pi">:</span>
+      <span class="na">memory</span><span class="pi">:</span> <span class="s">400Mi</span>
+  <span class="na">securityContext</span><span class="pi">:</span>
+    <span class="na">fsGroup</span><span class="pi">:</span> <span class="m">2000</span>
+    <span class="na">runAsNonRoot</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">runAsUser</span><span class="pi">:</span> <span class="m">1000</span>
+  <span class="na">serviceAccountName</span><span class="pi">:</span> <span class="s">prometheus</span>
+  <span class="na">version</span><span class="pi">:</span> <span class="s">v2.22.1</span>
+  <span class="na">serviceMonitorSelector</span><span class="pi">:</span> <span class="pi">{}</span>
+</code></pre></div></div>
+
+<p>ensuite, lancer la commande</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f prometheus.yaml
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>prometheus.monitoring.coreos.com/prometheus created
+</code></pre></div></div>
+
+<p>On vérifie</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get prometheus
+</code></pre></div></div>
+<p>On devrait obtenir le resultat suivant</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME         VERSION   REPLICAS   AGE
+prometheus   v2.22.1   2          12s
+</code></pre></div></div>
+
+<p>Et une autre commande</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pod -l app=prometheus
+</code></pre></div></div>
+<p>Et un autre resultat :-)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME                      READY   STATUS    RESTARTS   AGE
+prometheus-prometheus-0   2/2     Running   1          69s
+prometheus-prometheus-1   2/2     Running   1          69s
+</code></pre></div></div>
+
+<p>Et une derniere étape pour exposer le service afin que prometheus soit accessible via Grafana. 
+Créer un autre fichier YAML, nommer le comme vous le voulez, par prometheus_service.yaml</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prometheus</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">prometheus</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">web</span>
+    <span class="na">port</span><span class="pi">:</span> <span class="m">9090</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="s">web</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">prometheus</span>
+  <span class="na">sessionAffinity</span><span class="pi">:</span> <span class="s">ClientIP</span>
+</code></pre></div></div>
+
+<p>Et on applique le fichier</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f prometheus_service.yaml
+</code></pre></div></div>
+<p>qui devrait afficher ce message</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service/prometheus created
+</code></pre></div></div>
+
+<p>Et on vérifie si tout va bien</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get service
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+kubernetes            ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP    72m
+prometheus            ClusterIP   10.107.134.128   &lt;none&gt;        9090/TCP   11s
+prometheus-operated   ClusterIP   None             &lt;none&gt;        9090/TCP   2m26s
+prometheus-operator   ClusterIP   None             &lt;none&gt;        8080/TCP   5m56s
+</code></pre></div></div>
+
+<p>Et voilà, on a un prometheus UP&amp;RUNNING ;-) mais sans Grafana le travail n’est pas bien fait.</p>
+
+<p>Pour installer Grafana, on passe par Helm, il faut installer Helm si vous ne l’avez pas encore.</p>
+
+<p>Ajoutons le repo de bitnami</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm repo add bitnami https://charts.bitnami.com/bitnami
+</code></pre></div></div>
+<p>Ensuite, on installe grafana, en mode quickstart ;-)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install grafana bitnami/grafana
+</code></pre></div></div>
+
+<p>ça devrait afficher un message de ce type</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAME: grafana
+LAST DEPLOYED: Thu Apr  8 17:32:32 2021
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+** Please be patient while the chart is being deployed **
+
+1. Get the application URL by running these commands:
+    echo "Browse to http://127.0.0.1:8080"
+    kubectl port-forward svc/grafana 8080:3000 &amp;
+
+2. Get the admin credentials:
+
+    echo "User: admin"
+    echo "Password: $(kubectl get secret grafana-admin --namespace default -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 --decode)"
+</code></pre></div></div>
+
+:ET

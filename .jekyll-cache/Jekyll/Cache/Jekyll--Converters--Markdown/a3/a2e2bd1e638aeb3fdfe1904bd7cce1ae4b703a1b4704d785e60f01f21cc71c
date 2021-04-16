@@ -1,0 +1,406 @@
+I"�a<h1 id="introduction">Introduction</h1>
+
+<p>Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.</p>
+
+<p>De manière generale, une application écrite en Java, par exemple un microservice, a besoin d’utiliser une base de données, de lancer un serveur web HTTP ou d’effectuer des calculs, etc….</p>
+
+<p>Pas besoin de réinventer la roue, quelqu’un a déjà fait le travail à notre place et a publié ses projets sur Internet, c’est la magie de l’Open Source.</p>
+
+<p>Pour réutiliser ces composants Open Source dans notre projet, on a besoin d’un outil comme Maven. Il nous aide à résoudre beaucoup de problématiques comme la compatibilité des versions, l’inter-dependance entre composants, etc…</p>
+
+<p>Dans le monde Java, il y a trois principaux outils pour gérer les dependances :</p>
+
+<ul>
+  <li><a href="https://maven.apache.org">Apache Maven</a></li>
+  <li><a href="https://gradle.org/">Gradle</a></li>
+  <li><a href="https://ant.apache.org/">Apache Ant</a></li>
+</ul>
+
+<p>Apache Maven reste le plus populaire et le plus utilisé même si Gradle monte en puissance.</p>
+
+<p>Apache Maven a commencé en 2002, très stable, robuste et supporté par la majorité des IDEs (Intellij, Eclipse, …), il est aussi utilisé par quasiment tous les projets Open Source.</p>
+
+<h1 id="installation">Installation</h1>
+
+<p>En tant que Développeur, on utilise très souvent plusieurs outils et en plusieurs versions. Pour faciliter l’installation et la gestion de ces outils, on peut utiliser <a href="https://sdkman.io/">SDK Man</a>.</p>
+
+<p>La procedure à suivre pour installer SDKMan est disponible à l’adresse suivante https://sdkman.io/install.</p>
+
+<p>Une fois SDKMan est installé, lancé la commande suivante pour installer Java JDK (s’il n’est pas déjà installé sur votre ordinateur) :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sdk install java 11.0.10.hs-adpt
+</code></pre></div></div>
+
+<p>La 11.0.10.hs-adpt est la derniere version de OpenJDK11 disponible sur la plateforme sdkman au moment où j’écris cet article mais vous pouvez afficher la dernière version via la commande :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sdk ls java
+</code></pre></div></div>
+
+<p>Après avoir installé Java, voici la commande pour installer Maven :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sdk install maven
+</code></pre></div></div>
+
+<p>A noter que Maven est integré par défaut dans l’IDE comme Intellij, Eclipse. On peut l’utiliser directement mais personnelement je prefere utiliser la ligne de commande et avoir une installation à l’exterieur de l’IDE.</p>
+
+<p>Pour vérifier que l’installation a bien fonctionné :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn --version
+</code></pre></div></div>
+
+<p>Le résultat devrait afficher la version de Maven et son emplacement.</p>
+
+<h1 id="créer-un-projet-java-via-maven">Créer un projet Java via Maven</h1>
+
+<p>On peut créer un projet Java/Maven via un IDE type Intellij ou Eclipse, mais pour comprendre le fonctionnement, on va d’abord créer un projet Maven via la ligne commande :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn archetype:generate -DgroupId=io.rasologg.tutoriel -DartifactId=java-maven-project -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+</code></pre></div></div>
+
+<p>Si tout va bien, des fichiers seront téléchargés et Maven va créer un le projet contenant structuré comme ci-dessous :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java-maven-project
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── io
+    │           └── rasologg
+    │               └── tutoriel
+    │                   └── App.java
+    └── test
+        └── java
+            └── io
+                └── rasologg
+                    └── tutoriel
+                        └── AppTest.java
+</code></pre></div></div>
+<h2 id="archetype">Archetype</h2>
+
+<p>Simplement un template de projet, ici on utilise “maven-archetype-quickstart” est genere un projet Java très basique à partir du template. On peut trouver une liste des archetypes inclus par défaut dans Maven https://maven.apache.org/archetypes/ . On peut écrire son propre archetype.</p>
+
+<h2 id="superpom">SuperPOM</h2>
+
+<p>Pour bien utiliser Maven, il faut respecter quelques règles comme l’utilisation d’un fichier XML nommé pom.xml à la racine du projet, la structure du projet, etc…</p>
+
+<p>Ces règles sont definies dans le SuperPOM, il se trouve dans un fichier jar (MAVEN_HOME/lib/maven-model-builder-x.y.z/org/apache/maven/model/pom-4.0.0.xml)</p>
+
+<h2 id="pom-projet-object-model">POM (Projet Object Model)</h2>
+<p>Le pom.xml est le fichier qui décrit ce que Maven doit faire.</p>
+
+<p>Voici le contenu créé par la ligne de commande ci-dessus :</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+  <span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>io.rasologg.tutoriel<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>java-maven-project<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
+  <span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;name&gt;</span>java-maven-project<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;url&gt;</span>http://maven.apache.org<span class="nt">&lt;/url&gt;</span>
+  <span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div></div>
+
+<p>Le fichier XML commence par le tag “project” et doit respecter le schema XSD indiqué.</p>
+
+<h3 id="modelversion">modelVersion</h3>
+
+<p>modelVersion est obligatoire et contient toujours “4.0.0” qui correspond à la version du model qu’on a vu dans le SuperPOM. Cette valeur existe depuis la version 2.x de Maven.</p>
+
+<p>Avec Maven 1.x, le modelVersion est “3.0.0”.</p>
+
+<p>La “5.0.0” est actuellement en status “brouillon” (Draft) https://cwiki.apache.org/confluence/display/MAVEN/POM+Model+Version+5.0.0</p>
+
+<h3 id="maven-coordinates">Maven coordinates</h3>
+
+<p>Maven utilise trois tags (groupId, artifactId, version) pour identifier un projet.</p>
+
+<p>Le <em>groupId</em> permet de grouper tous les projet par entité, souvent le nom de domaine inversé de la société ou la personne qui a developpé le projet.</p>
+
+<p>Le tag <em>artifactId</em> c’est le nom du projet.</p>
+
+<p>le tag <em>version</em> comme son nom l’indique, c’est pour preciser la version du projet, generalement on suit le <a href="https://semver.org/">SemVer</a> x.y.z mais on peut y ajouter un “qualifier” x.y.z-qualifier. Un qualifier specifique utile pendant le developpement est le “SNAPSHOT”, le SNAPSHOT permet d’indiquer à Maven que le projet est en cours de developpement.</p>
+
+<h3 id="autres-tags">Autres tags</h3>
+
+<p>Le packaging est le type d’archivage utilisé pour le projet : jar, war, rar.</p>
+
+<p>Les autres tag : <em>name</em>, <em>url</em> sont optionnels, on peut ajouter aussi le tag <em>description</em></p>
+
+<p>Le tag <em>dependencies</em> permet d’ajouter tous les dependences utilisés par le projet, dans notre cas, on a “junit” ajouté par défaut pour les tests unitaires.</p>
+
+<p>Tout au long de l’evolution, on ajoutera autant de <em>“dependency”</em> que necessaire, par exemple pour utiliser une base de données.</p>
+
+<h2 id="maven-repository">Maven repository</h2>
+
+<p>Un repository est un serveur distant où la communauté open source partage d’autres projets, et à partir duquel on peut télécharger les projets qu’on a besoin pour construire notre application.</p>
+
+<p>Trois types de repository : local, central et remote.</p>
+
+<p>Local se trouve sur la machine de developpement, par défaut il se trouve dans le repertoire USER_HOME/.m2/</p>
+
+<p>Central est le repository par défaut utilisé par Maven, l’adresse de ce repository se trouve dans le superPOM et qui est https://repo.maven.apache.org/maven2.</p>
+
+<p>Remote autres repository public, accessible via Internet ou privé interne à l’entreprise.</p>
+
+<h2 id="comment-compiler-et-tester-le-projet">Comment compiler et tester le projet</h2>
+
+<p>Avant de compiler, modifions un peu notre fichier “pom.xml” en y ajoutant quelques “properties”</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+<span class="nt">&lt;url&gt;</span>http://maven.apache.org<span class="nt">&lt;/url&gt;</span>
+<span class="nt">&lt;properties&gt;</span>
+  <span class="nt">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.build.sourceEncoding&gt;</span>
+  <span class="nt">&lt;maven.compiler.source&gt;</span>11<span class="nt">&lt;/maven.compiler.source&gt;</span>
+  <span class="nt">&lt;maven.compiler.target&gt;</span>11<span class="nt">&lt;/maven.compiler.target&gt;</span>
+<span class="nt">&lt;/properties&gt;</span>
+<span class="nt">&lt;dependencies&gt;</span>
+...
+</code></pre></div></div>
+<p>Ces proprietes nous permettent de configurer l’encodage en “UTF-8”, de specifier la version du compilateur java qu’on souhaite utiliser.
+Et maintenant, lançons la commande pour compiler :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn compile
+</code></pre></div></div>
+
+<pre><code class="language-log">[INFO] Scanning for projects...
+[INFO]
+[INFO] --------------&lt; io.rasologg.tutoriel:java-maven-project &gt;---------------
+[INFO] Building java-maven-project 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ java-maven-project ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /workspace/tuto/java-maven-project/src/main/resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ java-maven-project ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /workspace/tuto/java-maven-project/target/classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.380 s
+[INFO] Finished at: 2021-04-04T18:17:37+02:00
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+<p>Un nouveau repertoire “target” vient d’être créé pour contenir les fichiers compilés qui sont le “.class”.</p>
+
+<p>Pour lancer les tests unitaires :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn test
+</code></pre></div></div>
+
+<p>La commande “test” lance automatiquement la compilation aussi, c’est le cycle de vie d’une commande dans Maven.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] Scanning for projects...
+[INFO]
+...
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running io.rasologg.tutoriel.AppTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.808 s
+[INFO] Finished at: 2021-04-04T18:26:38+02:00
+[INFO] ------------------------------------------------------------------------
+</code></pre></div></div>
+
+<p>Et maintenant pour “packager” notre application, il suffit tout simplement de lancer la commande:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn package
+</code></pre></div></div>
+<p>Un fichier jar est créé dans le repertoire “target”.</p>
+
+<p>Pour supprimer le repertoire “target”</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean
+</code></pre></div></div>
+
+<p>On peut enchainer des commandes</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean package
+</code></pre></div></div>
+
+<p>Et si on souhaite eviter l’execution des tests (chose qu’il faut absolument eviter mais ça arrive de vouloir packager sans passer par une étape de test unitaire qui peut être très long si le projet est assez compliqué)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn clean package -DskipTests
+</code></pre></div></div>
+
+<h1 id="cycle-de-vie-dun-build-maven">Cycle de vie d’un build maven</h1>
+
+<p>Maven n’est pas seulement pour gérer les dependances d’un projet mais il gere aussi les differentes étapes de la construction d’une application. Maven gere ces differentes via des plugins et en suivante une cycle de vie bien defini : validate -&gt; compile -&gt; test -&gt; package -&gt; verify -&gt; install -&gt; deploy.</p>
+
+<p>validate : verifier la structure du projet
+compile : compiler le code source
+test : lancer les tests unitaires
+package : créer un package contenant le code source compilé
+verify : lancer les tests d’integration
+install : copier le package dans le repository local 
+deploy : transferer le package vers un repository distant.</p>
+
+<h1 id="comment-chercher-les-dependences">Comment chercher les dependences</h1>
+
+<p>https://search.maven.org/</p>
+
+<p>https://mvnrepository.com/</p>
+
+<h1 id="dependences-transitives">Dependences transitives</h1>
+
+<p>Une dependence peut dependre d’autres projets, Maven recupere automatiques ces autres projets lors de la compilation.</p>
+
+<p>Par exemplem, si on ajoute la libraire “hibernate-core” dans notre projet, celle-ci emmenera d’autres libraires dans notre projet.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+      <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>org.hibernate<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>hibernate-core<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>6.0.0.Alpha7<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div></div>
+<p>Ceci peut nous emmener des dependences qu’on ne souhaite pas, qu’on n’a pas besoin dans notre projet, Maven nous propose une solution pour exclure ces dependences.</p>
+
+<h1 id="exclure-les-dependences">Exclure les dependences</h1>
+
+<p>Pour exclure les dependences, on peut utiliser le tag exclusions/exclusion:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+      <span class="nt">&lt;dependency&gt;</span>
+      <span class="nt">&lt;groupId&gt;</span>org.hibernate<span class="nt">&lt;/groupId&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>hibernate-core<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;version&gt;</span>6.0.0.Alpha7<span class="nt">&lt;/version&gt;</span>
+      <span class="nt">&lt;exclusions&gt;</span>
+        <span class="nt">&lt;exclusion&gt;</span>
+          <span class="nt">&lt;groupId&gt;</span>org.jboss.logging<span class="nt">&lt;/groupId&gt;</span>
+          <span class="nt">&lt;artifactId&gt;</span>jboss-logging<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;/exclusion&gt;</span>
+      <span class="nt">&lt;/exclusions&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+  <span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div></div>
+
+<h1 id="dependency-mediation">Dependency mediation</h1>
+
+<p>S’il y a un conflit sur la version d’une dependance, Maven utilise la plus proche du graphe de dependances (nearest definition).</p>
+
+<p>Par exemple, le projet A depend des deux projets B et C la version 2.0, et B depend aussi du projet C mais la version 1.1, Maven choisira la version 2.0 du projet C.</p>
+
+<h1 id="dependance-cyclique">Dependance cyclique</h1>
+
+<p>Un projet A depend du projet B et B depend de A, est une dependance cyclique. Maven ne peut pas gerer ce genre de dependance.</p>
+
+<h1 id="scope">Scope</h1>
+
+<p>Un autre moyen de filtrer les dependences, on peut utiliser le “scope”, par exemple des dependences qui ne sont utiles que pour les tests unitaires seulement, on peut ajouter le scope “test”.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p>La valeur par défaut d’un scope est “compile”, d’autres valeurs sont possible : runtime, provided</p>
+
+<h1 id="version">Version</h1>
+
+<p>La methode la plus simple et la plus sur est de specifier une valeur fixe de la version de dependence, mais Maven nous permet d’ajouter un peu plus de flexibilité</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;version&gt;</span>[4.1,]<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- la version la plus recente après 4.1--&gt;</span>
+<span class="nt">&lt;version&gt;</span>[4.1,4.5]<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- la version la plus recente entre 4.1 et 4.5 --&gt;</span>
+<span class="nt">&lt;version&gt;</span>[4.1,4.5)<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- la version entre 4.1 et avant la 4.5, 4.5 exclue --&gt;</span>
+<span class="nt">&lt;version&gt;</span>[,4.5]<span class="nt">&lt;/version&gt;</span> <span class="c">&lt;!-- le maximum 4.5 --&gt;</span>
+</code></pre></div></div>
+
+<h1 id="effective-pom">Effective POM</h1>
+
+<p>Plus haut on a parlé d’un Super POM, la configuration par défaut de Maven. Ce super POM est ajouté automatiquement par Maven au projet, qui nous donne l’effective POM.</p>
+
+<p>A noter que le contenu du super pom peut être surcharger par le pom du projet.</p>
+
+<p>On peut regarder l’effective pom via la ligne de commande suivante :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:effective-pom -output=effective-pom.xml
+</code></pre></div></div>
+
+<h1 id="comment-fonctionner-maven-architecture">Comment fonctionner Maven (architecture)</h1>
+
+<p><img src="./maven-architecture.png" alt="alt text" title="Comment fonctionne Maven" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:effective-settings -Doutput=effective-settings.xml
+</code></pre></div></div>
+
+<h1 id="plugins">Plugins</h1>
+<p>Les plugins apportent beaucoup d’outil utile pour le projet, par exemple pour compiler, pour executer les tests.
+Par défaut Maven ajoute beaucoup de plugins venant du superPOM, et certaines configurations ne nous conviennent pas, et pour resoudre ce probleme il suffit de surcharger la configuration.</p>
+
+<p>Par exemple, pour changer la version de Java, on surcharge la configuration du plugin maven-compiler-plugin</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;build&gt;</span>
+  <span class="nt">&lt;plugins&gt;</span>
+    <span class="nt">&lt;plugin&gt;</span>
+      <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+      <span class="nt">&lt;configuration&gt;</span>
+        <span class="nt">&lt;source&gt;</span>11<span class="nt">&lt;/source&gt;</span>
+        <span class="nt">&lt;target&gt;</span>11<span class="nt">&lt;/target&gt;</span>
+      <span class="nt">&lt;/configuration&gt;</span>
+    <span class="nt">&lt;/plugin&gt;</span>
+  <span class="nt">&lt;/plugins&gt;</span>
+<span class="nt">&lt;/build&gt;</span>
+</code></pre></div></div>
+
+<h1 id="multi-modules">Multi-modules</h1>
+<p>Techniquement on peut avoir un projet Java composé d’un seul module (un seul pom.xml), mais au fur et à mesure de l’evolution du projet, une restructuration est necessaire, par exemple les codes qui gere l’accès aux données dans un repertoire et les codes qui gerent la logique metier dans un autre repertoire.
+C’est pour gérer ce genre de problematique que Maven propose le multi-module.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>projet-parent
+├── pom.xml
+    ├── module1
+         ├── pom.xml
+    ├── module2
+         ├── pom.xml
+</code></pre></div></div>
+
+<h1 id="packaging-avec-jib">Packaging avec Jib</h1>
+
+<p>Le packaging est le type d’archivage utilisé pour le projet : jar, war, rar. Avant l’utilisation du Cloud et la conteneurisation, on utilise le war ou la jar pour deployer l’application.</p>
+
+<p>Avec l’architecture Cloud Native, le packaging final est maintenant une image conteneur (image docker). Cette image peut être construite de differente façon, via un fichier Dockerfile, mais dans le cadre de Maven, on s’interesse au plugi <a href="https://github.com/GoogleContainerTools/jib">Jib</a>.</p>
+
+<p>Jib est un plugin Maven developpé par Google qui permet de créer une image conteneur en mode 100% Java. Via un Dockerfile, on est obligé d’installer l’application Docker parce qu’on a besoin du demon docker.</p>
+
+<h1 id="astuces">Astuces</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:describe -Ddetail=true -Dplugin=compiler
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:help -Ddetail=true
+</code></pre></div></div>
+:ET

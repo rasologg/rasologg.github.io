@@ -1,0 +1,60 @@
+I"�<h2 id="developper-un-site-web-avec-python-flask">Developper un site web avec Python Flask</h2>
+
+<ul>
+  <li>Installer Python. Un tutoriel interessant se trouve ici <a href="https://realpython.com/installing-python">RealPython</a></li>
+  <li>Créer le repertoire de votre projet</li>
+  <li>Entrer dans le repertoire et créer l’environnement virtuel (virtual env), comme suit :
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> venv venv
+</code></pre></div>    </div>
+    <p>Le deuxieme “venv” peut être n’importe quoi, par exemple le nom du projet</p>
+  </li>
+  <li>Activer le virtual env :
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>source venv/bin/activate
+</code></pre></div>    </div>
+    <p>Une fois l’environnement virtuel est créé et activé, on n’a plus besoin de specifier la version de python, comme python3 ou pip3
+juste écrire python, pip et ça marchera</p>
+  </li>
+  <li>Créer un fichier nommé requirements.txt et ajouter la ligne :
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flask
+</code></pre></div>    </div>
+  </li>
+  <li>Créer un autre fichier requirements-dev.txt
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-r requirements.txt
+</code></pre></div>    </div>
+  </li>
+  <li>Installer le framework
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install flask
+</code></pre></div>    </div>
+    <p>Si vous utiliser un outil de developpement comme PyCharm, il detecte automatiquement le contenu du fichier requirements.txt et installe le framework à votre place</p>
+  </li>
+  <li>Maintenant, vous pouvez commencer à écrire votre premier programme, commencez par créer un fichier, par exemple app.py, à l’interieur de ce fichier, ecrire le code ci-dessous :</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">flask</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="p">.</span><span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+  <span class="k">return</span> <span class="s">"Bonjour le monde !"</span>
+<span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div></div>
+
+<ul>
+  <li>On sauvegarde et on peut lancer le programme. Tout d’abord, il faut specifier deux variables d’environnement FLASK_APP et FLASK_ENV</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export FLASK_APP=app #app correspond au nom de fichier qu'on a créé ci-dessus
+export FLASK_ENV=development
+</code></pre></div></div>
+<ul>
+  <li>Maintenant, on lance le programme
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flask run
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Par défaut, Flask écoute sur le port 5000, si on souhaite specifier un autre si le 5000 est déjà utilisé</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>flask run -p 5001
+</code></pre></div></div>
+:ET

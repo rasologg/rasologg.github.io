@@ -1,0 +1,22 @@
+I"O<h1 id="la-gestion-des-secrets-dans-kubernetes-à-lépoque-de-gitops">La gestion des secrets dans Kubernetes à l’époque de GitOps</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p>Ces derniers temps, on attend de plus en plus parler de GitOps avec Kubernetes. Grosso modo, GitOps, c’est tout gérer via Git, 
+les fichiers de configuration, les fichiers de description de déploiement, et donc par conséquent les identifiants et mot de passe que les applications ont besoin pour fonctionner, 
+par exemple l’identifiant et mot de passe pour la base de données.</p>
+
+<p>Mettre ces informations directement sur Git n’est pas vraiment une bonne idée, de point de vue sécurité, et beaucoup d’entreprise continue à gérer les secrets manuellement via une commande kubectl et stocker les identifiants et mot de passe dans un outil comme keepass.
+Et ceci déroge au concept de GitOps.</p>
+
+<p>Pour répondre à ce problématique que la fondation CNCF étudie les outils suivants afin de les inclure dans l’éco-système cloud-native :</p>
+
+<ul>
+  <li><a href="https://www.vaultproject.io/">Hashicorp Vault</a>, <a href="https://aws.amazon.com/fr/secrets-manager/">AWS Secrets Manager</a>, Certificate Manager, AWS KMS</li>
+  <li>Bitnami Sealed Secret, Encrypted repositories</li>
+  <li><a href="https://cloud.google.com/solutions/secrets-management">Google Secrets Management</a>, <a href="https://github.com/mozilla/sops">Sops</a></li>
+</ul>
+
+<p>Plus d’info :
+https://www.cncf.io/announcements/2021/02/23/cncf-provides-insights-into-secrets-management-tools-with-latest-end-user-technology-radar/</p>
+
+:ET
