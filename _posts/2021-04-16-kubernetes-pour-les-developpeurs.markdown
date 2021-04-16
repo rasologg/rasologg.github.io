@@ -189,17 +189,17 @@ Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.7", GitCom
 Deployer et lancer rapidement un pod (methode imperative)
 
 ```
-kubectl run mynginx --image=nginx
+kubectl run monnginx --image=nginx
 ```
 
 ```
-pod/mynginx created
+pod/monnginx created
 ```
 
 ```
 kubectl get all
 NAME          READY   STATUS    RESTARTS   AGE
-pod/mynginx   1/1     Running   0          3m26s
+pod/monnginx   1/1     Running   0          3m26s
 
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   37m
@@ -216,11 +216,11 @@ En production, un pod ne doit pas être demarré tout seul, il ne sera pas redep
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mynginx
+  name: monnginx
   namespace: default
 spec:
   containers:
-  - name: mynginx
+  - name: monnginx
     image: nginx:latest
 ``` 
 
@@ -598,7 +598,45 @@ Il y a plusieurs type de service :
 - ExternalName : une sorte de redirection de nom DNS.
 - Service sans "selector" : utilisé pour connecter directement à une IP/port par exemple un serveur de base de données ou une application exterieur au cluster Kubernetes.
 
+Pour exposer un service rapidement via la ligne de commande
+```
+kubectl expose deployment monnginx --port=80 --type=NodePort
+```
+```
+service/monnginx exposed
+```
 
+```
+kubectl get service
+```
+
+```
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP        4d1h
+monnginx              NodePort    10.102.160.117   <none>        80:32392/TCP   58s
+```
+
+Mais créer un service via la ligne de commande n'est pas vraiment la bonne pratique, il faut plutôt utiliser des fichiers.
+Voici un exemple de fichier YAML pour créer un service :
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mon-serveur-web
+spec:
+  selector:
+    app: monnginx
+  ports:
+  - port: 80
+    name: mon-serveur-web
+  type: NodePort
+```
+
+```
+❯ kubectl apply -f nginx-service.yaml
+service/mon-serveur-web created
+```
 
 ## Ingress
 //TODO
