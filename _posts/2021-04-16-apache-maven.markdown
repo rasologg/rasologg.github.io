@@ -386,8 +386,7 @@ mvn help:effective-pom -output=effective-pom.xml
 
 # Comment fonctionner Maven (architecture)
 
-![alt text](./maven-architecture.png "Comment fonctionne Maven")
-
+![Screenshot]({{site.baseurl}}/assets/images/maven-architecture.png)
 
 ```
 mvn help:effective-settings -Doutput=effective-settings.xml

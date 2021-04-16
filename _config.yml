@@ -23,9 +23,11 @@ email: gege.eric@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   my blog.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://rasologg.github.io"
 twitter_username: rasologg
 github_username:  rasologg
+
+permalink: /:title/
 
 # Build settings
 theme: minima

@@ -45,7 +45,7 @@ Pour demarrer un conteneur, il faut un "runtime", ce conteneur "runtime" permet 
 
 Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.
 
-![alt text](./kubernetes-developper-application-container.png "Comment fonctionne un conteneur")
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-container.png)
 
 Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.
 
@@ -98,7 +98,7 @@ Comme les projets Linux, il y a beaucoup de distribution de Kubernetes, on peut 
 
 Si on simplifie, Kubernetes est un RESTful API qui expose toutes les operations possibles à faire sur sa base de données, qui est une base de données NoSQL ETCD.
 
-![alt text](./kubernetes-developper-application-api-server.png "Comment fonctionne l'api de kubernetes")
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-api-server.png)
 
 ## dashbord
 
@@ -122,7 +122,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 # Architecture de Kubernetes
 
-![alt text](./kubernetes-developper-application-architecture.png "Comment fonctionne l'api de kubernetes")
+![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-architecture.png)
 
 ## L'API (kube-apiserver)
 

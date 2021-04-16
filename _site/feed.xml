@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-04-16T14:14:32+02:00</updated><id>/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="/blog/2021/04/16/apache-maven.html" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/apache-maven</id><content type="html" xml:base="/blog/2021/04/16/apache-maven.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-04-16T14:40:21+02:00</updated><id>/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="/blog/2021/04/16/apache-maven.html" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>/blog/2021/04/16/apache-maven</id><content type="html" xml:base="/blog/2021/04/16/apache-maven.html">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.&lt;/p&gt;
 
@@ -353,7 +353,7 @@ deploy : transferer le package vers un repository distant.&lt;/p&gt;
 
 &lt;h1 id=&quot;comment-fonctionner-maven-architecture&quot;&gt;Comment fonctionner Maven (architecture)&lt;/h1&gt;
 
-&lt;p&gt;&lt;img src=&quot;./maven-architecture.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne Maven&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/maven-architecture.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:effective-settings -Doutput=effective-settings.xml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -440,7 +440,7 @@ CMD [&quot;sh&quot;]
 
 &lt;p&gt;Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-container.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne un conteneur&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-container.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.&lt;/p&gt;
 
@@ -492,7 +492,7 @@ Status: Downloaded newer image for nginx:1.19
 
 &lt;p&gt;Si on simplifie, Kubernetes est un RESTful API qui expose toutes les operations possibles à faire sur sa base de données, qui est une base de données NoSQL ETCD.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-api-server.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne l'api de kubernetes&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-api-server.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;dashbord&quot;&gt;dashbord&lt;/h2&gt;
 
@@ -514,7 +514,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 &lt;h1 id=&quot;architecture-de-kubernetes&quot;&gt;Architecture de Kubernetes&lt;/h1&gt;
 
-&lt;p&gt;&lt;img src=&quot;./kubernetes-developper-application-architecture.png&quot; alt=&quot;alt text&quot; title=&quot;Comment fonctionne l'api de kubernetes&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-architecture.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;lapi-kube-apiserver&quot;&gt;L’API (kube-apiserver)&lt;/h2&gt;
 
