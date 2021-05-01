@@ -7,11 +7,13 @@ categories: blog
 
 # Qu'est ce qu'une image ?
 
-Dans le monde du Kubernetes, une image est une encapsulation d'une application sous une forme portable et facile à déployer. L'image contient tous les fichiers que l'application a besoin pour fonctionner correctement, et elle est construite à partir d'un mini-noyaux Linux.
+Dans le monde de Kubernetes, une image est une encapsulation d'une application (par exemple un microservice) sous une forme portable, facile à déployer. L'image contient tous les fichiers que l'application a besoin pour fonctionner correctement, et elle est construite à partir d'un mini-noyaux Linux.
 
-Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d'une image.
+Une fois lancée, une image devient un conteneur, donc un conteneur est une instance d'une image.
 
-Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d'en créer à partir d'autres outils sans écrire ce fichier.
+Il y a plusieurs façons de créer une image :
+- via un fichier Dockerfile
+- via d'autres outils comme [Jib](https://github.com/GoogleContainerTools/jib) pour les developpeurs Java.
 
 Voici un exemple d'un Dockerfile :
 
@@ -21,9 +23,9 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 ```
 
-Une image un ensemble des couches et toujours construit à partir d'une autre image. Dans l'exemple ci-dessus, on part de l'image "nginx:alpine" qui est disponible sur Internet, qui elle est basée sur une autre image "alpine" et ainsi de suite.
+Une image un ensemble des couches et toujours construite à partir d'une autre image. Dans l'exemple ci-dessus, on part de l'image "nginx:alpine", qui elle est basée sur une autre image "alpine" et ainsi de suite.
 
-Si on souhaite construire une image à partir de zero, on utilise l'instruction "FROM scratch", ceci ordonne à l'outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).
+Si on souhaite construire une image à partir de zero, on utilise l'instruction "FROM scratch",  https://hub.docker.com/_/scratch une image vide qui permet de créer "from scratch".
 
 Par exemple, l'image [busybox](https://github.com/docker-library/busybox/blob/master/Dockerfile.template)
 
@@ -33,7 +35,7 @@ ADD busybox.tar.xz /
 CMD ["sh"]
 ```
 
-Google a developpé un outil open-source, 100% Java, [Jib](https://github.com/GoogleContainerTools/jib) pour construire facilement une image sans avoir besoin d'un daemon comme Docker.
+[Jib](https://github.com/GoogleContainerTools/jib), est un outil open-source, 100% en Java, developpé par Google, il permet de construire facilement une image sans avoir besoin d'un daemon comme Docker.
 
 # Qu'est ce qu'un conteneur ?
 
