@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Quarkus: développer un microservice cloud-native"
-date:   2021-03-16 13:33:29 +0200
+date:   2021-04-30 13:33:29 +0200
 categories: blog
 ---
 
@@ -139,13 +139,14 @@ __  ____  __  _____   ___  __ ____  ______
 2021-05-01 10:11:47,652 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, resteasy]
 ```
 
-![Screenshot]({{site.baseurl}}/assets/images/quarkus-welcome-page.png)
+![Quarkus page de bienvenu]({{site.baseurl}}/assets/images/quarkus-welcome-page.png)
 
 Ouvrons le projet avec un IDE et analysons son contenu.
 
-Quarkus n'a pas de class "main" dans le projet, comme on a l'habitude avec les autres frameworks comme Spring.
+Comme vous l'avez remarqué, il n'y a que SurveyResource.java qui a été créé, pas de class main.
+Quarkus ne crée pas une class "main" dans le projet, pas comme les autres frameworks comme Spring. 
 Le projet utilise la class par défaut de Quarkus : io.quarkus.runner.GeneratedMain.
-Mais ceci n'empeche pas de créer une class main personalisée si besoin.
+Mais ceci n'empeche pas de créer une class main personalisée si on le souhaite.
 
 Par exemple :
 ```java
@@ -159,5 +160,8 @@ public class SurveyMain {
     }
 }
 ```
+
+Quarkus crée un repertoire "docker" contenant des Dockerfiles qu'on utilisera pour créer l'image du conteneur. 
+Il est aussi possible d'utiliser Jib pour créer l'image du conteneur sans passer par un Dockerfile.
 
 //TODO ...

@@ -1,0 +1,5 @@
+I"�<h1 id="introduction">Introduction</h1>
+<p>Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour.
+Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere).
+Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM).</p>
+:ET

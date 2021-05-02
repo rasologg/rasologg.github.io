@@ -1,4 +1,4 @@
-I"�a<h1 id="introduction">Introduction</h1>
+I"�a<h1 id="introduction">Introduction</h1>
 
 <p>Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.</p>
 
@@ -351,9 +351,9 @@ deploy : transferer le package vers un repository distant.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:effective-pom -output=effective-pom.xml
 </code></pre></div></div>
 
-<h1 id="comment-fonctionner-maven-architecture">Comment fonctionner Maven (architecture)</h1>
+<h1 id="comment-fonctionne-maven-architecture-">Comment fonctionne Maven (architecture) ?</h1>
 
-<p><img src="/assets/images/maven-architecture.png" alt="Screenshot" /></p>
+<p><img src="/assets/images/maven-architecture.png" alt="Architecture de Maven" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn help:effective-settings -Doutput=effective-settings.xml
 </code></pre></div></div>

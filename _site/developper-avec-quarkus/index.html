@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Quarkus: développer un microservice cloud-native | Gégé Rasolondraibe</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Quarkus: développer un microservice cloud-native" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour. Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere). Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM)." />
+<meta property="og:description" content="Introduction Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour. Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere). Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM)." />
+<link rel="canonical" href="https://rasologg.github.io/developper-avec-quarkus/" />
+<meta property="og:url" content="https://rasologg.github.io/developper-avec-quarkus/" />
+<meta property="og:site_name" content="Gégé Rasolondraibe" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-04-30T13:33:29+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Quarkus: développer un microservice cloud-native" />
+<script type="application/ld+json">
+{"url":"https://rasologg.github.io/developper-avec-quarkus/","headline":"Quarkus: développer un microservice cloud-native","datePublished":"2021-04-30T13:33:29+02:00","dateModified":"2021-04-30T13:33:29+02:00","description":"Introduction Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour. Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere). Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM).","mainEntityOfPage":{"@type":"WebPage","@id":"https://rasologg.github.io/developper-avec-quarkus/"},"@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://rasologg.github.io/feed.xml" title="Gégé Rasolondraibe" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Gégé Rasolondraibe</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">A propos</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Quarkus: développer un microservice cloud-native</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-04-30T13:33:29+02:00" itemprop="datePublished">Apr 30, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="introduction">Introduction</h1>
+<p>Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour.
+Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere).
+Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM).</p>
+
+<p>Ce WORA a du sens à l’époque on deployait l’application sur un système precis Linux, Windows, MacOS, mais maintenant on crée une image et on lance l’application avec une plateforme d’execution d’un conteneur comme Docker par exemple.
+En production on orchestre avec Kubernetes ou d’autres plateforme equivalentes.</p>
+
+<p>Alors pourquoi ne pas construire l’application comme un vrai natif “Cloud” ? Pour répondre à cette question que des frameworks comme Quarkus ont vu le jour.</p>
+
+<p>Quarkus, est un framework developpé par RedHat, open source et apporte des avantages comme :</p>
+
+<ul>
+  <li>taille du package réduite</li>
+  <li>utilisation de memoire RAM fortement réduite</li>
+  <li>temps de démarrage accéléré pour gérer la montée en charge facilement dans un système cloud (Kubernetes) (scale up)</li>
+</ul>
+
+<p>Ceci grace à la compilation AOT (Ahead-Of-Time), en une phrase, compile l’application directement en binaire proche du CPU, contrairement à l’ancien mode JIT (Just-In-Time) qui interprete le bytecode au moment où on appelle.</p>
+
+<p>En tant que développeur, Quarkus apporte aussi des avantages comme :</p>
+
+<ul>
+  <li>l’auto-chargement des modifications, pas besoin d’arrêter et rédémmarrer l’application à chaque fois qu’on modifie le code</li>
+  <li>on se focalise à l’écrire des tests fonctionnels</li>
+</ul>
+
+<h1 id="créer-un-projet">Créer un projet</h1>
+
+<p>Plusieurs façons de créer un projet Quarkus :</p>
+
+<ul>
+  <li>via le portail https://code.quarkus.io/ à la Spring Initializr.</li>
+  <li>via votre IDE préféré comme Intellij, ou Microsoft VS Code</li>
+  <li>via Maven</li>
+</ul>
+
+<p>Avec Maven :</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn io.quarkus:quarkus-maven-plugin:1.13.3.Final:create -DprojectGroupId=io.rasologg.survey 
+-DprojectArtifactId=survey -DprojectVersion=1.0.0-SNAPSHOT 
+-DclassName=io.rasologg.survey.web.SurveyResource -Dpath=/surveys
+</code></pre></div></div>
+<p>Cette commande devrait afficher le message ci-dessous et crée un projet nommé “survey”.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----------
+...
+applying codestarts...
+🔠 java
+🧰 maven
+🗃 quarkus
+📜 config-properties
+🛠 dockerfiles
+🛠 maven-wrapper
+🐒 resteasy-example
+
+-----------
+
+[SUCCESS] ✅ quarkus project has been successfully generated in:
+--&gt; /Users/g.rasolondraibe/workspace/tuto/survey
+-----------
+[INFO]
+[INFO] ========================================================================================
+[INFO] Your new application has been created in /Users/g.rasolondraibe/workspace/tuto/survey
+[INFO] Navigate into this directory and launch your application with mvn quarkus:dev
+[INFO] Your application will be accessible on http://localhost:8080
+[INFO] ========================================================================================
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.064 s
+[INFO] Finished at: 2021-05-01T10:00:05+02:00
+[INFO] ------------------------------------------------------------------------
+</code></pre></div></div>
+<p>Voici la structure du projet créé par le plugin Maven de quarkus</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>survey
+├── README.md
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src
+    ├── main
+    │   ├── docker
+    │   │   ├── Dockerfile.jvm
+    │   │   ├── Dockerfile.legacy-jar
+    │   │   ├── Dockerfile.native
+    │   │   └── Dockerfile.native-distroless
+    │   ├── java
+    │   │   └── io
+    │   │       └── rasologg
+    │   │           └── survey
+    │   │               └── web
+    │   │                   └── SurveyResource.java
+    │   └── resources
+    │       ├── META-INF
+    │       │   └── resources
+    │       │       └── index.html
+    │       └── application.properties
+    └── test
+        └── java
+            └── io
+                └── rasologg
+                    └── survey
+                        └── web
+                            ├── NativeSurveyResourceIT.java
+                            └── SurveyResourceTest.java
+</code></pre></div></div>
+
+<p>Pour lancer le projet qu’on vient de créer</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ cd survey
+❯ ./mvnw quarkus:dev
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] Scanning for projects...
+[INFO]
+[INFO] ---------------------&lt; io.rasologg.survey:survey &gt;----------------------
+[INFO] Building survey 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- quarkus-maven-plugin:1.13.3.Final:dev (default-cli) @ survey ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] Nothing to compile - all classes are up to date
+Listening for transport dt_socket at address: 5005
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+ -/ /_/ / /_/ / __ |/ , _/ ,&lt; / /_/ /\ \
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+2021-05-01 10:11:47,612 INFO  [io.quarkus] (Quarkus Main Thread) survey 1.0.0-SNAPSHOT on JVM (powered by Quarkus 1.13.3.Final) started in 1.861s. Listening on: http://localhost:8080
+2021-05-01 10:11:47,652 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2021-05-01 10:11:47,652 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, resteasy]
+</code></pre></div></div>
+
+<p><img src="/assets/images/quarkus-welcome-page.png" alt="Quarkus page de bienvenu" /></p>
+
+<p>Ouvrons le projet avec un IDE et analysons son contenu.</p>
+
+<p>Comme vous l’avez remarqué, il n’y a que SurveyResource.java qui a été créé, pas de class main.
+Quarkus ne crée pas une class “main” dans le projet, pas comme les autres frameworks comme Spring. 
+Le projet utilise la class par défaut de Quarkus : io.quarkus.runner.GeneratedMain.
+Mais ceci n’empeche pas de créer une class main personalisée si on le souhaite.</p>
+
+<p>Par exemple :</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">io.quarkus.runtime.Quarkus</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">io.quarkus.runtime.annotations.QuarkusMain</span><span class="o">;</span>
+
+<span class="nd">@QuarkusMain</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SurveyMain</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Quarkus</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Quarkus crée un repertoire “docker” contenant des Dockerfiles qu’on utilisera pour créer l’image du conteneur. 
+Il est aussi possible d’utiliser Jib pour créer l’image du conteneur sans passer par un Dockerfile.</p>
+
+<p>//TODO …</p>
+
+  </div><a class="u-url" href="/developper-avec-quarkus/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Gégé Rasolondraibe</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Gégé Rasolondraibe</li><li><a class="u-email" href="mailto:"></a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/rasologg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">rasologg</span></a></li><li><a href="https://www.twitter.com/rasologg"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">rasologg</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Un blog très simple pour partager ma passion.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

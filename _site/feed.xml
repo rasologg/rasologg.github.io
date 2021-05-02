@@ -1,4 +1,163 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://rasologg.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://rasologg.github.io/" rel="alternate" type="text/html" /><updated>2021-04-16T15:28:32+02:00</updated><id>https://rasologg.github.io/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>my blog.</subtitle><entry><title type="html">Java : developper avec Maven</title><link href="https://rasologg.github.io/apache-maven/" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>https://rasologg.github.io/apache-maven</id><content type="html" xml:base="https://rasologg.github.io/apache-maven/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="https://rasologg.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://rasologg.github.io/" rel="alternate" type="text/html" /><updated>2021-05-02T17:53:30+02:00</updated><id>https://rasologg.github.io/feed.xml</id><title type="html">Gégé Rasolondraibe</title><subtitle>Un blog très simple pour partager ma passion.</subtitle><entry><title type="html">Quarkus: développer un microservice cloud-native</title><link href="https://rasologg.github.io/developper-avec-quarkus/" rel="alternate" type="text/html" title="Quarkus: développer un microservice cloud-native" /><published>2021-04-30T13:33:29+02:00</published><updated>2021-04-30T13:33:29+02:00</updated><id>https://rasologg.github.io/developper-avec-quarkus</id><content type="html" xml:base="https://rasologg.github.io/developper-avec-quarkus/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour.
+Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere).
+Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM).&lt;/p&gt;
+
+&lt;p&gt;Ce WORA a du sens à l’époque on deployait l’application sur un système precis Linux, Windows, MacOS, mais maintenant on crée une image et on lance l’application avec une plateforme d’execution d’un conteneur comme Docker par exemple.
+En production on orchestre avec Kubernetes ou d’autres plateforme equivalentes.&lt;/p&gt;
+
+&lt;p&gt;Alors pourquoi ne pas construire l’application comme un vrai natif “Cloud” ? Pour répondre à cette question que des frameworks comme Quarkus ont vu le jour.&lt;/p&gt;
+
+&lt;p&gt;Quarkus, est un framework developpé par RedHat, open source et apporte des avantages comme :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;taille du package réduite&lt;/li&gt;
+  &lt;li&gt;utilisation de memoire RAM fortement réduite&lt;/li&gt;
+  &lt;li&gt;temps de démarrage accéléré pour gérer la montée en charge facilement dans un système cloud (Kubernetes) (scale up)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ceci grace à la compilation AOT (Ahead-Of-Time), en une phrase, compile l’application directement en binaire proche du CPU, contrairement à l’ancien mode JIT (Just-In-Time) qui interprete le bytecode au moment où on appelle.&lt;/p&gt;
+
+&lt;p&gt;En tant que développeur, Quarkus apporte aussi des avantages comme :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;l’auto-chargement des modifications, pas besoin d’arrêter et rédémmarrer l’application à chaque fois qu’on modifie le code&lt;/li&gt;
+  &lt;li&gt;on se focalise à l’écrire des tests fonctionnels&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;créer-un-projet&quot;&gt;Créer un projet&lt;/h1&gt;
+
+&lt;p&gt;Plusieurs façons de créer un projet Quarkus :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;via le portail https://code.quarkus.io/ à la Spring Initializr.&lt;/li&gt;
+  &lt;li&gt;via votre IDE préféré comme Intellij, ou Microsoft VS Code&lt;/li&gt;
+  &lt;li&gt;via Maven&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Avec Maven :&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn io.quarkus:quarkus-maven-plugin:1.13.3.Final:create -DprojectGroupId=io.rasologg.survey 
+-DprojectArtifactId=survey -DprojectVersion=1.0.0-SNAPSHOT 
+-DclassName=io.rasologg.survey.web.SurveyResource -Dpath=/surveys
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Cette commande devrait afficher le message ci-dessous et crée un projet nommé “survey”.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-----------
+...
+applying codestarts...
+🔠 java
+🧰 maven
+🗃 quarkus
+📜 config-properties
+🛠 dockerfiles
+🛠 maven-wrapper
+🐒 resteasy-example
+
+-----------
+
+[SUCCESS] ✅ quarkus project has been successfully generated in:
+--&amp;gt; /Users/g.rasolondraibe/workspace/tuto/survey
+-----------
+[INFO]
+[INFO] ========================================================================================
+[INFO] Your new application has been created in /Users/g.rasolondraibe/workspace/tuto/survey
+[INFO] Navigate into this directory and launch your application with mvn quarkus:dev
+[INFO] Your application will be accessible on http://localhost:8080
+[INFO] ========================================================================================
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.064 s
+[INFO] Finished at: 2021-05-01T10:00:05+02:00
+[INFO] ------------------------------------------------------------------------
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Voici la structure du projet créé par le plugin Maven de quarkus&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;survey
+├── README.md
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
+└── src
+    ├── main
+    │   ├── docker
+    │   │   ├── Dockerfile.jvm
+    │   │   ├── Dockerfile.legacy-jar
+    │   │   ├── Dockerfile.native
+    │   │   └── Dockerfile.native-distroless
+    │   ├── java
+    │   │   └── io
+    │   │       └── rasologg
+    │   │           └── survey
+    │   │               └── web
+    │   │                   └── SurveyResource.java
+    │   └── resources
+    │       ├── META-INF
+    │       │   └── resources
+    │       │       └── index.html
+    │       └── application.properties
+    └── test
+        └── java
+            └── io
+                └── rasologg
+                    └── survey
+                        └── web
+                            ├── NativeSurveyResourceIT.java
+                            └── SurveyResourceTest.java
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pour lancer le projet qu’on vient de créer&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ cd survey
+❯ ./mvnw quarkus:dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[INFO] Scanning for projects...
+[INFO]
+[INFO] ---------------------&amp;lt; io.rasologg.survey:survey &amp;gt;----------------------
+[INFO] Building survey 1.0.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- quarkus-maven-plugin:1.13.3.Final:dev (default-cli) @ survey ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] Nothing to compile - all classes are up to date
+Listening for transport dt_socket at address: 5005
+__  ____  __  _____   ___  __ ____  ______
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+ -/ /_/ / /_/ / __ |/ , _/ ,&amp;lt; / /_/ /\ \
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+2021-05-01 10:11:47,612 INFO  [io.quarkus] (Quarkus Main Thread) survey 1.0.0-SNAPSHOT on JVM (powered by Quarkus 1.13.3.Final) started in 1.861s. Listening on: http://localhost:8080
+2021-05-01 10:11:47,652 INFO  [io.quarkus] (Quarkus Main Thread) Profile dev activated. Live Coding activated.
+2021-05-01 10:11:47,652 INFO  [io.quarkus] (Quarkus Main Thread) Installed features: [cdi, resteasy]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/quarkus-welcome-page.png&quot; alt=&quot;Quarkus page de bienvenu&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ouvrons le projet avec un IDE et analysons son contenu.&lt;/p&gt;
+
+&lt;p&gt;Comme vous l’avez remarqué, il n’y a que SurveyResource.java qui a été créé, pas de class main.
+Quarkus ne crée pas une class “main” dans le projet, pas comme les autres frameworks comme Spring. 
+Le projet utilise la class par défaut de Quarkus : io.quarkus.runner.GeneratedMain.
+Mais ceci n’empeche pas de créer une class main personalisée si on le souhaite.&lt;/p&gt;
+
+&lt;p&gt;Par exemple :&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;io.quarkus.runtime.Quarkus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;io.quarkus.runtime.annotations.QuarkusMain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;nd&quot;&gt;@QuarkusMain&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SurveyMain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;Quarkus&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Quarkus crée un repertoire “docker” contenant des Dockerfiles qu’on utilisera pour créer l’image du conteneur. 
+Il est aussi possible d’utiliser Jib pour créer l’image du conteneur sans passer par un Dockerfile.&lt;/p&gt;
+
+&lt;p&gt;//TODO …&lt;/p&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Introduction Depuis l’avènement de Docker, Kubernetes, Cloud, beaucoup de frameworks ont vu le jour. Pour rappel, la philosophie de Java est : écrire le code une fois et lancer sur n’importe quel système d’exploitation (le fameux WORA : Write Once Run Anywhere). Ce choix n’a que des avantages, on constate aussi des problèmes comme le temps de démarrage de l’application, la consommation des resources memoire (RAM).</summary></entry><entry><title type="html">Java : developper avec Maven</title><link href="https://rasologg.github.io/apache-maven/" rel="alternate" type="text/html" title="Java : developper avec Maven" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>https://rasologg.github.io/apache-maven</id><content type="html" xml:base="https://rasologg.github.io/apache-maven/">&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;Maven (plus precisement Apache Maven) est un outil de gestion de dépendances en Java. Mais il permet aussi d’automatiser differentes étapes utiles pendant un developpement logiciel : tests et qualité, compilation, packaging, archivage et documentation.&lt;/p&gt;
 
@@ -351,9 +510,9 @@ deploy : transferer le package vers un repository distant.&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:effective-pom -output=effective-pom.xml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h1 id=&quot;comment-fonctionner-maven-architecture&quot;&gt;Comment fonctionner Maven (architecture)&lt;/h1&gt;
+&lt;h1 id=&quot;comment-fonctionne-maven-architecture-&quot;&gt;Comment fonctionne Maven (architecture) ?&lt;/h1&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/maven-architecture.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/maven-architecture.png&quot; alt=&quot;Architecture de Maven&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:effective-settings -Doutput=effective-settings.xml
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -404,11 +563,15 @@ C’est pour gérer ce genre de problematique que Maven propose le multi-module.
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn help:help -Ddetail=true
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="blog" /><summary type="html">Introduction</summary></entry><entry><title type="html">Kubernetes pour les développeurs</title><link href="https://rasologg.github.io/kubernetes-pour-les-developpeurs/" rel="alternate" type="text/html" title="Kubernetes pour les développeurs" /><published>2021-04-16T13:33:29+02:00</published><updated>2021-04-16T13:33:29+02:00</updated><id>https://rasologg.github.io/kubernetes-pour-les-developpeurs</id><content type="html" xml:base="https://rasologg.github.io/kubernetes-pour-les-developpeurs/">&lt;h1 id=&quot;quest-ce-quune-image-&quot;&gt;Qu’est ce qu’une image ?&lt;/h1&gt;
 
-&lt;p&gt;Dans le monde du Kubernetes, une image est une encapsulation d’une application sous une forme portable et facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.&lt;/p&gt;
+&lt;p&gt;Dans le monde de Kubernetes, une image est une encapsulation d’une application (par exemple un microservice) sous une forme portable, facile à déployer. L’image contient tous les fichiers que l’application a besoin pour fonctionner correctement, et elle est construite à partir d’un mini-noyaux Linux.&lt;/p&gt;
 
-&lt;p&gt;Une fois lancée sur une machine, une image devient un conteneur, donc un conteneur est une instance d’une image.&lt;/p&gt;
+&lt;p&gt;Une fois lancée, une image devient un conteneur, donc un conteneur est une instance d’une image.&lt;/p&gt;
 
-&lt;p&gt;Pour construire une image, il faut écrire un fichier, un descripteur, communement appelé Dockerfile, mais il est aussi possible d’en créer à partir d’autres outils sans écrire ce fichier.&lt;/p&gt;
+&lt;p&gt;Il y a plusieurs façons de créer une image :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;via un fichier Dockerfile&lt;/li&gt;
+  &lt;li&gt;via d’autres outils comme &lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt; pour les developpeurs Java.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;Voici un exemple d’un Dockerfile :&lt;/p&gt;
 
@@ -417,9 +580,9 @@ MAINTAINER Gégé Rasolo
 COPY index.html /usr/share/nginx/html/index.html
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Une image un ensemble des couches et toujours construit à partir d’une autre image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine” qui est disponible sur Internet, qui elle est basée sur une autre image “alpine” et ainsi de suite.&lt;/p&gt;
+&lt;p&gt;Une image un ensemble des couches et toujours construite à partir d’une autre image. Dans l’exemple ci-dessus, on part de l’image “nginx:alpine”, qui elle est basée sur une autre image “alpine” et ainsi de suite.&lt;/p&gt;
 
-&lt;p&gt;Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”, ceci ordonne à l’outil (daemon Docker) de construire à partir du mini-noyau linux (rootfs).&lt;/p&gt;
+&lt;p&gt;Si on souhaite construire une image à partir de zero, on utilise l’instruction “FROM scratch”,  https://hub.docker.com/_/scratch une image vide qui permet de créer “from scratch”.&lt;/p&gt;
 
 &lt;p&gt;Par exemple, l’image &lt;a href=&quot;https://github.com/docker-library/busybox/blob/master/Dockerfile.template&quot;&gt;busybox&lt;/a&gt;&lt;/p&gt;
 
@@ -428,7 +591,7 @@ ADD busybox.tar.xz /
 CMD [&quot;sh&quot;]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Google a developpé un outil open-source, 100% Java, &lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt; pour construire facilement une image sans avoir besoin d’un daemon comme Docker.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/GoogleContainerTools/jib&quot;&gt;Jib&lt;/a&gt;, est un outil open-source, 100% en Java, developpé par Google, il permet de construire facilement une image sans avoir besoin d’un daemon comme Docker.&lt;/p&gt;
 
 &lt;h1 id=&quot;quest-ce-quun-conteneur-&quot;&gt;Qu’est ce qu’un conteneur ?&lt;/h1&gt;
 
@@ -440,7 +603,7 @@ CMD [&quot;sh&quot;]
 
 &lt;p&gt;Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-container.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-container.png&quot; alt=&quot;Kubernetes container&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.&lt;/p&gt;
 
@@ -514,7 +677,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 &lt;h1 id=&quot;architecture-de-kubernetes&quot;&gt;Architecture de Kubernetes&lt;/h1&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-architecture.png&quot; alt=&quot;Screenshot&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-architecture.png&quot; alt=&quot;Architecture de Kubernetes&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;lapi-kube-apiserver&quot;&gt;L’API (kube-apiserver)&lt;/h2&gt;
 
@@ -523,6 +686,11 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 &lt;p&gt;Plusieurs API-Resources : apps, networking, storage, …&lt;/p&gt;
 
 &lt;p&gt;Tous les 3 mois il y a un update d’API, il faut bien identifier la version à utiliser.&lt;/p&gt;
+
+&lt;p&gt;Pour savoir la version de l’API utilisée par le cluster, il suffit de lancer la commande suivante :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl api-versions
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;lorchestrateur-kube-scheduler&quot;&gt;L’orchestrateur (kube-scheduler)&lt;/h2&gt;
 
@@ -572,15 +740,15 @@ Server Version: version.Info{Major:&quot;1&quot;, Minor:&quot;19&quot;, GitVersi
 
 &lt;p&gt;Deployer et lancer rapidement un pod (methode imperative)&lt;/p&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl run mynginx --image=nginx
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl run monnginx --image=nginx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod/mynginx created
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pod/monnginx created
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get all
 NAME          READY   STATUS    RESTARTS   AGE
-pod/mynginx   1/1     Running   0          3m26s
+pod/monnginx   1/1     Running   0          3m26s
 
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 service/kubernetes   ClusterIP   10.96.0.1    &amp;lt;none&amp;gt;        443/TCP   37m
@@ -596,11 +764,11 @@ service/kubernetes   ClusterIP   10.96.0.1    &amp;lt;none&amp;gt;        443/TC
 &lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
 &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Pod&lt;/span&gt;
 &lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mynginx&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;monnginx&lt;/span&gt;
   &lt;span class=&quot;na&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;default&lt;/span&gt;
 &lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
   &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mynginx&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;monnginx&lt;/span&gt;
     &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nginx:latest&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -688,11 +856,301 @@ limits:
 
 &lt;p&gt;En production, il faut toujours créer un pod à partir d’un objet “deployment”.&lt;/p&gt;
 
+&lt;p&gt;Voici la structure d’un fichier YAML “deployment” :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;apps/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deployment&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;NomApplication&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;matchLabels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;NomApplication&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;NomApplication&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;NomApplication&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;Image&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;limits&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;Memory&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;CPU&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;containerPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;lt;Port&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Comme tous les fichiers de Kubernetes, ça commence toujours par la version de l’API (apiVersion). L’objet de deploiement se trouve donc dans “apps”.
+“kind” sera toujours “Deployment”.
+metadata.name : est le nom de l’application à deployer.
+containers.image : est le chemin où se trouve l’image, et la version.&lt;/p&gt;
+
+&lt;p&gt;Voici un exemple complet pour deployer l’application Redis.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;apps/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deployment&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;matchLabels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis:alpine&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;limits&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;128Mi&quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;500m&quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;containerPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;6379&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl apply -f redis-deploy.yaml
+deployment.apps/redis created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Verifions si l’application est demarrée.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-726rp   1/1     Running   0          24s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ici, l’option “-l” veut dire label, et donc on souhaite juste afficher les pods qui ont un label “app” avec la valeur “redis”. C’est la valeur qu’on a indiqué dans le fichier YAML ci-dessus (spec.template.metadata.labels).&lt;/p&gt;
+
+&lt;p&gt;Et maintenant si supprime le pod :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl delete po redis-d8c6dcd54-726rp
+pod &quot;redis-d8c6dcd54-726rp&quot; deleted
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On constate que Kubernetes crée automatiquement une autre instance :&lt;/p&gt;
+
+&lt;p&gt;redis-d8c6dcd54-726rp                  1/1     Terminating         0          66s
+redis-d8c6dcd54-xbx8j                  0/1     ContainerCreating   0          3s&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-xbx8j   1/1     Running   0          86s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On a dit que l’historique de deploiement est aussi gérée par l’object “Deployment”.
+On peut consulter cette historique via la commande :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl rollout history deployment redis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ça devrait afficher le resultat suivant :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         &amp;lt;none&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Ici on n’a qu’une seule revision parce qu’on a rien modifié pour l’instant.
+Kubernetes suit une strategie quand une modification est faite sur le deploiment :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;la stratégie “Recreate” : ça supprime l’ancien pod et crée une nouvelle, ça implique une petite indisponibilité du service.&lt;/li&gt;
+  &lt;li&gt;la stratégie “RollingUpdate” : cette stretégie garantit la disponibilité de l’application, et donc Kubernetes remplace un pod à la fois.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;On va apporter quelques modifications à notre fichier redis-deploy.yaml pour gérer la stratégie de mise à jour et commençons par une ancienne version de Redis “5.0.12-alpine” :&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;apps/v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deployment&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;replicas&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;strategy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;RollingUpdate&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;rollingUpdate&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;maxSurge&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;maxUnavailable&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;matchLabels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis:5.0.12-alpine&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;resources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;limits&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;memory&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;128Mi&quot;&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;500m&quot;&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;containerPort&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;6379&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl apply -f redis-deploy.yaml
+deployment.apps/redis configured
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Verifions :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-`&quot;&gt;❯ kubectl get po -l app=redis
+NAME                    READY   STATUS    RESTARTS   AGE
+redis-d8c6dcd54-9bqfl   1/1     Running   0          12s
+redis-d8c6dcd54-bjxjf   1/1     Running   0          12s
+redis-d8c6dcd54-nnrqs   1/1     Running   0          12s
+redis-d8c6dcd54-t8t26   1/1     Running   0          12s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Maintenant on a bien 4 replicas, comme c’est demandé dans le fichier YAML.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl rollout history deployment redis
+deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         &amp;lt;none&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Maintenant, modifions la version de Redis :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl set image deployment.apps/redis redis=redis:6-alpine
+deployment.apps/redis image updated
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Vérifions si la version a été mise à jour&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl get deployment.apps/redis -o=jsonpath='{$.spec.template.spec.containers[:1].image}'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;redis:6-alpine
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Et si on reconsulte l’historique, la revision devrait être 2 :&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl rollout history deployment redis
+deployment.apps/redis
+REVISION  CHANGE-CAUSE
+1         &amp;lt;none&amp;gt;
+2         &amp;lt;none&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl rollout history deployment redis --revision=1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deployment.apps/redis with revision #1
+Pod Template:
+  Labels:	app=redis
+	pod-template-hash=68d544cd59
+  Containers:
+   redis:
+    Image:	redis:5.0.12-alpine
+    Port:	6379/TCP
+    Host Port:	0/TCP
+    Limits:
+      cpu:	500m
+      memory:	128Mi
+    Environment:	&amp;lt;none&amp;gt;
+    Mounts:	&amp;lt;none&amp;gt;
+  Volumes:	&amp;lt;none
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl rollout history deployment redis --revision=2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deployment.apps/redis with revision #2
+Pod Template:
+  Labels:	app=redis
+	pod-template-hash=5f7d7d959f
+  Containers:
+   redis:
+    Image:	redis:6-alpine
+    Port:	6379/TCP
+    Host Port:	0/TCP
+    Limits:
+      cpu:	500m
+      memory:	128Mi
+    Environment:	&amp;lt;none&amp;gt;
+    Mounts:	&amp;lt;none&amp;gt;
+  Volumes:	&amp;lt;none&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl get replicasets.apps -l app=redis
+NAME               DESIRED   CURRENT   READY   AGE
+redis-5f7d7d959f   4         4         4       11m
+redis-68d544cd59   0         0         0       15m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Si on revient en arriere&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl rollout undo deployment redis --to-revision=1
+deployment.apps/redis rolled back
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h2 id=&quot;services&quot;&gt;Services&lt;/h2&gt;
 
+&lt;p&gt;Un pod tout seul n’est pas accessible depuis l’exterieur en tant qu’application.&lt;/p&gt;
+
+&lt;p&gt;Pour debugger, on peut quand meme utiliser le “port forward”, mais ceci n’est pas l’utilisation normale d’une application.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl port-forward pod/mynginx 8989:80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Forwarding from 127.0.0.1:8989 -&amp;gt; 80
+Forwarding from [::1]:8989 -&amp;gt; 80
+Handling connection for 8989
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-port-forward.png&quot; alt=&quot;Kubernetes port forward&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Pour exposer l’application, il faut créer un service.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-pod-access.png&quot; alt=&quot;Kubernetes pod access&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/kubernetes-developper-application-pod-access-2.png&quot; alt=&quot;Kubernetes pod access&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Il y a plusieurs type de service :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ClusterIP : le type par défaut, et il est accessible qu’à l’interieur du cluster.&lt;/li&gt;
+  &lt;li&gt;NodePort : ouvre le port de l’application sur le noeud, et donc on peut y acceder directement depuis l’exterieur.&lt;/li&gt;
+  &lt;li&gt;LoadBalancer : utilisé par le fourniseur cloud public.&lt;/li&gt;
+  &lt;li&gt;ExternalName : une sorte de redirection de nom DNS.&lt;/li&gt;
+  &lt;li&gt;Service sans “selector” : utilisé pour connecter directement à une IP/port par exemple un serveur de base de données ou une application exterieur au cluster Kubernetes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pour exposer un service rapidement via la ligne de commande&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl expose deployment monnginx --port=80 --type=NodePort
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;service/monnginx exposed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl get service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes            ClusterIP   10.96.0.1        &amp;lt;none&amp;gt;        443/TCP        4d1h
+monnginx              NodePort    10.102.160.117   &amp;lt;none&amp;gt;        80:32392/TCP   58s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Mais créer un service via la ligne de commande n’est pas vraiment la bonne pratique, il faut plutôt utiliser des fichiers.
+Voici un exemple de fichier YAML pour créer un service :&lt;/p&gt;
+
+&lt;div class=&quot;language-yaml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;v1&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Service&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mon-serveur-web&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;monnginx&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mon-serveur-web&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;NodePort&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;❯ kubectl apply -f nginx-service.yaml
+service/mon-serveur-web created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h2 id=&quot;ingress&quot;&gt;Ingress&lt;/h2&gt;
+&lt;p&gt;//TODO&lt;/p&gt;
 
 &lt;h2 id=&quot;persistent-volumes&quot;&gt;Persistent Volumes&lt;/h2&gt;
+&lt;p&gt;//TODO&lt;/p&gt;
 
 &lt;h2 id=&quot;jobs&quot;&gt;Jobs&lt;/h2&gt;
 

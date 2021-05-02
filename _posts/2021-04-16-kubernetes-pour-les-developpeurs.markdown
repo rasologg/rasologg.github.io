@@ -47,7 +47,7 @@ Pour demarrer un conteneur, il faut un "runtime", ce conteneur "runtime" permet 
 
 Conteneur runtime : docker, lxc, runc, cri-o, rkt, containerd, podman, buildah.
 
-![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-container.png)
+![Kubernetes container]({{site.baseurl}}/assets/images/kubernetes-developper-application-container.png)
 
 Un conteneur est fortement inspiré des fonctionnalités offertes par le systeme Linux.
 
@@ -124,7 +124,7 @@ curl http://localhost:8001/api/v1/namespaces/default/pods
 
 # Architecture de Kubernetes
 
-![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-architecture.png)
+![Architecture de Kubernetes]({{site.baseurl}}/assets/images/kubernetes-developper-application-architecture.png)
 
 ## L'API (kube-apiserver)
 
@@ -584,13 +584,13 @@ Forwarding from [::1]:8989 -> 80
 Handling connection for 8989
 ```
 
-![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-port-forward.png)
+![Kubernetes port forward]({{site.baseurl}}/assets/images/kubernetes-developper-application-port-forward.png)
 
 Pour exposer l'application, il faut créer un service.
 
-![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access.png)
+![Kubernetes pod access]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access.png)
 
-![Screenshot]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access-2.png)
+![Kubernetes pod access]({{site.baseurl}}/assets/images/kubernetes-developper-application-pod-access-2.png)
 
 Il y a plusieurs type de service :
 

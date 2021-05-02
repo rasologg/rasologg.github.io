@@ -384,9 +384,9 @@ On peut regarder l'effective pom via la ligne de commande suivante :
 mvn help:effective-pom -output=effective-pom.xml
 ```
 
-# Comment fonctionner Maven (architecture)
+# Comment fonctionne Maven (architecture) ?
 
-![Screenshot]({{site.baseurl}}/assets/images/maven-architecture.png)
+![Architecture de Maven]({{site.baseurl}}/assets/images/maven-architecture.png)
 
 ```
 mvn help:effective-settings -Doutput=effective-settings.xml
