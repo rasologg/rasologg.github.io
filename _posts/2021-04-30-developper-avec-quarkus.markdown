@@ -164,4 +164,58 @@ public class SurveyMain {
 Quarkus crée un repertoire "docker" contenant des Dockerfiles qu'on utilisera pour créer l'image du conteneur. 
 Il est aussi possible d'utiliser Jib pour créer l'image du conteneur sans passer par un Dockerfile.
 
+Le fichier application.properties nous permettra d'ajouter les configurations specifique à l'application.
+
+Pour l'instant, notre microservice n'a que ceci comme code
+```java
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+@Path("/surveys")
+public class SurveyResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return "Hello RESTEasy";
+    }
+}
+```
+Grosso modo, ce code expose un REST API via la route (@Path) "/surveys", et la méthode HTTP GET (@GET)
+nous produit (@Produces) du texte (MediaType.TEXT_PLAIN).
+
+Si on teste rapidement via cURL, on a le resultat ci-dessous. 
+Plus tard, on utilisera d'autre outil de test plus complet comme Postman ou SoapUI.
+
+```
+❯ curl http://localhost:8080/surveys
+Hello RESTEasy
+```
+
+@Path : pour designer la route
+@Produces et @Consumes : pour designer le format de données produit et consommé, ça peut être du JSON, XML, etc...
+@GET : pour designer la méthode HTTP accepté pour la route, comme son nom l'indique ça correspond au HTTP GET.
+Et donc, 
+- @POST pour POST
+- @PUT pour PUT
+- @PATCH pour PATCH
+- @DELETE pour DELETE
+- @HEAD pour HEAD
+
+
+
+@QueryParam : des parametres de type clé=valeur, par exemple /surveys?test=toto
+
+@PathParam : des parametres envoyés dans la route, par exemple /surveys/1000/questions
+
+@MatrixParam
+
+@FormParam
+
+@BeanParam
+
+@HeaderParam
+
 //TODO ...
